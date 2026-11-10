@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Тест за 2 урок 3 блока</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFCFF; --grid:#E5EAF4; --ink:#1E2240; --ink-soft:#5B6182; --pen:#2F55D4;
+  --card:#FFFFFF; --line:#D6DCEA; --margin:#F3A6BA;
+  --hl-yellow:#FFE27A; --hl-green:#AEEDBA; --hl-blue:#BCD6FF; --hl-purple:#DCCBFF; --hl-pink:#FFB8D6; --hl-orange:#FFCDA3;
+  --ok:#1F9D55; --bad:#D6336C;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#151826; --grid:#21263A; --ink:#ECEEF8; --ink-soft:#A3A9C6; --pen:#93AAFF;
+    --card:#1C2032; --line:#33394F; --margin:#7A3A4E;
+    --hl-yellow:#7D6A22; --hl-green:#2C6E42; --hl-blue:#2D4F8C; --hl-purple:#56429A; --hl-pink:#8C3459; --hl-orange:#8A5228;
+    --ok:#5BD08A; --bad:#FF7AA8;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#151826; --grid:#21263A; --ink:#ECEEF8; --ink-soft:#A3A9C6; --pen:#93AAFF;
+  --card:#1C2032; --line:#33394F; --margin:#7A3A4E;
+  --hl-yellow:#7D6A22; --hl-green:#2C6E42; --hl-blue:#2D4F8C; --hl-purple:#56429A; --hl-pink:#8C3459; --hl-orange:#8A5228;
+  --ok:#5BD08A; --bad:#FF7AA8;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;min-height:100%;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+  color:var(--ink);
+  font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  font-size:17px;line-height:1.5;
+}
+.hand{font-family:'Caveat','Segoe Print','Comic Sans MS',cursive}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 56px}
+
+/* header */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.title{font-family:'Caveat','Segoe Print',cursive;font-weight:700;font-size:clamp(36px,7vw,52px);line-height:1;margin:0}
+.title span{background:linear-gradient(transparent 50%,var(--hl-yellow) 50%,var(--hl-yellow) 92%,transparent 92%);padding:0 8px;border-radius:4px}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.pill{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:700;font-size:15px;white-space:nowrap}
+.pill b{font-family:'Caveat',cursive;font-size:24px;line-height:1;font-weight:700}
+
+/* topic strip */
+.strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin-bottom:12px;scrollbar-width:thin}
+.chip{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:999px;padding:6px 12px 6px 8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.chip .dot{width:14px;height:14px;border-radius:4px;background:var(--hl);transform:rotate(-8deg)}
+.chip.active{border-color:var(--ink)}
+.chip .cnt{color:var(--ink-soft);font-weight:600}
+
+/* card */
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:22px 20px 22px 44px;position:relative}
+.card::before{content:"";position:absolute;left:26px;top:0;bottom:0;width:2px;background:var(--margin)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;font-size:14px;font-weight:700}
+.tag{padding:2px 9px;border-radius:6px;background:var(--hl)}
+.kind{color:var(--ink-soft)}
+.num{margin-left:auto;color:var(--ink-soft);font-weight:600}
+.q{font-size:20px;font-weight:700;margin:0 0 6px}
+.sub{color:var(--ink-soft);margin:0 0 16px;font-weight:600}
+.big{font-family:'Caveat',cursive;font-size:34px;font-weight:700;line-height:1.1;margin:4px 0 16px}
+
+.opts{display:grid;gap:10px}
+.opt,.step{width:100%;text-align:left;font:inherit;font-size:18px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--paper);color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:12px}
+.opt:hover:not(:disabled),.step:hover:not(:disabled){border-color:var(--pen)}
+.opt:disabled,.step:disabled{cursor:default}
+.right{background:var(--hl-green)!important;border-color:var(--ok)!important}
+.wrong{background:var(--hl-pink)!important;border-color:var(--bad)!important}
+.opt .box{flex:none;width:26px;height:26px;border-radius:7px;border:1.5px solid var(--line);display:grid;place-items:center;font-size:15px;font-weight:800;background:var(--card)}
+.opt.sel{border-color:var(--pen);box-shadow:inset 0 0 0 1.5px var(--pen)}
+.opt.sel .box{background:var(--pen);color:var(--paper);border-color:var(--pen)}
+.opt .flag{margin-left:auto;font-size:14px;font-weight:800;white-space:nowrap}
+.mrow{display:grid;grid-template-columns:1fr minmax(0,1fr);gap:10px;align-items:center;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--paper)}
+.mrow .l{font-weight:700}
+.mrow select{font:inherit;font-size:17px;width:100%;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.mrow .c{grid-column:1/-1;font-size:14px;font-weight:800}
+@media (max-width:520px){.mrow{grid-template-columns:1fr}}
+.subtitle{margin:6px 0 0;font-weight:700;color:var(--ink-soft)}
+.step .n{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:14px;font-weight:800;background:var(--card)}
+.step .m{font-family:'Caveat',cursive;font-size:27px;line-height:1.15}
+.step .flag{margin-left:auto;font-size:14px;font-weight:800;white-space:nowrap}
+
+.ansrow{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:6px}
+.field{display:flex;align-items:flex-end;gap:6px}
+.field input{font-family:'Caveat',cursive;font-size:34px;font-weight:700;width:170px;max-width:60vw;padding:2px 10px;border:none;
+  border-bottom:2.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:0}
+.field input:focus{border-bottom-color:var(--pen);outline:none}
+.unit{font-family:'Caveat',cursive;font-size:28px;font-weight:700;padding-bottom:4px}
+.given{font-family:'Caveat',cursive;font-size:34px;font-weight:700;padding:0 10px;border-radius:6px}
+
+.btn{font:inherit;font-weight:800;font-size:16px;padding:11px 18px;border-radius:12px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.small{font-size:14px;padding:7px 12px}
+.btn:hover{filter:brightness(1.08)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn:focus-visible,.opt:focus-visible,.chip:focus-visible,.step:focus-visible,.field input:focus-visible,summary:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+
+.hintbox{margin-top:16px;padding:10px 14px;border-radius:10px;background:var(--hl-blue);font-weight:600}
+.note{margin:14px 0 4px;font-weight:700}
+.fb{margin-top:20px;padding-top:16px;border-top:1.5px dashed var(--line)}
+.verdict{font-family:'Caveat',cursive;font-size:36px;font-weight:700;display:inline-block;padding:0 10px;
+  background-image:linear-gradient(var(--vc),var(--vc));background-repeat:no-repeat;background-size:100% 62%;background-position:0 80%;
+  animation:sweep .45s ease-out}
+@keyframes sweep{from{background-size:0% 62%}}
+.correct{font-weight:700;margin:6px 0 0}
+.ex{margin:8px 0 16px}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+/* start */
+.lead{font-size:18px;margin:0 0 16px;max-width:60ch}
+.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:0 0 20px;padding:0;list-style:none}
+.topics li{display:flex;align-items:center;gap:10px;font-weight:700}
+.topics .dot{width:18px;height:18px;border-radius:5px;background:var(--hl);transform:rotate(-8deg);flex:none}
+.formats{display:grid;gap:8px;margin:0 0 22px}
+.formats div{display:flex;gap:10px;align-items:baseline}
+.formats .hand{font-size:26px;font-weight:700;min-width:120px}
+
+/* results */
+.res{display:grid;gap:14px;margin:8px 0 22px}
+.res-row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+.res-name{font-weight:800}
+.res-score{font-family:'Caveat',cursive;font-size:26px;font-weight:700}
+.bar{grid-column:1/-1;height:14px;border-radius:7px;background:var(--paper);border:1.5px solid var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--hl);transition:width .6s ease-out}
+.res-v{grid-column:1/-1;font-size:15px;color:var(--ink-soft);font-weight:600}
+.total{font-family:'Caveat',cursive;font-size:48px;font-weight:700;line-height:1;margin:0 0 4px}
+details{margin-top:6px;border-top:1.5px dashed var(--line);padding-top:12px}
+summary{cursor:pointer;font-weight:800}
+.tlist{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px}
+.tlist li{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:baseline;font-size:15px}
+.tlist .s{font-weight:800}
+.namefield{display:flex;flex-direction:column;gap:4px;margin:0 0 18px;max-width:340px}
+.namefield span{font-weight:800}
+.namefield input{font:inherit;font-size:20px;font-weight:700;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.namefield input:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+.namefield.err input{border-color:var(--bad)}
+.send{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 18px;padding:12px 14px;border-radius:12px;background:var(--paper);border:1.5px dashed var(--line);font-weight:700}
+
+@media (max-width:520px){
+  .card{padding:18px 14px 18px 34px}
+  .card::before{left:18px}
+  .q{font-size:18px}
+  .opt,.step{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){
+  .verdict{animation:none}
+  .bar i{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+// === DATA START: replace only this block ===
+const SUBTITLE = '8 класс · Русский язык · Сказуемое, подлежащее и тире';
+const TIME_LIMIT = '15:00';
+const TOPICS = [
+  {id:'sk',  name:'Виды сказуемого',         hl:'--hl-yellow'},
+  {id:'pd',  name:'Подлежащее',              hl:'--hl-green'},
+  {id:'tr',  name:'Тире между подлежащим и сказуемым', hl:'--hl-blue'}
+];
+
+const TASKS = [
+  {t:'sk', type:'multi', q:'Какое сказуемое в предложении «Нам нужно успеть на поезд»?',
+   opts:['ПГС','СГС','СИС'], a:[1],
+   hint:'Найди в сказуемом инфинитив. Есть ли рядом с ним слово-помощник?',
+   ex:'«Нужно успеть» — СГС: «нужно» (слово категории состояния) + инфинитив «успеть».'},
+  {t:'sk', type:'match', q:'Определи вид сказуемого.',
+   sub:'Для каждого предложения выбери вид сказуемого.',
+   left:['Завтра мы будем писать диктант.','Ночь казалась бесконечной.','Мне надо подумать.','Я бы прочитал эту книгу.','Он считается опытным тренером.'],
+   right:['СГС','ПГС','СИС'],
+   a:[1,2,0,1,2],
+   hint:'ПГС — один глагол (в том числе «буду делать» и форма с БЫ). СГС — помощник + инфинитив. СИС — связка + имя.',
+   ex:'«Будем писать» — ПГС (сложная форма будущего времени). «Казалась бесконечной» — СИС. «Надо подумать» — СГС. «Бы прочитал» — ПГС (условное наклонение). «Считается тренером» — СИС.'},
+  {t:'sk', type:'multi', label:'Найди ошибку', q:'Ученик определил вид сказуемого. В каких предложениях он ошибся?',
+   opts:['Мы начали строить шалаш — СГС.','Я буду читать книгу — СГС.','Сестра рада помочь — СИС.','Дедушка был лётчиком — СИС.'], a:[1,2],
+   hint:'Вспомни, чем «буду» отличается от настоящего помощника. И что идёт после слова «рада» — имя или инфинитив?',
+   ex:'«Буду читать» — ПГС: это одна сложная форма будущего времени. «Рада помочь» — СГС: краткое прилагательное + инфинитив. Остальные разобраны верно.'},
+
+  {t:'pd', type:'multi', q:'Что верно о подлежащем?',
+   opts:['Отвечает на вопросы «кто? что?».','Всегда стоит в начале предложения.','Стоит в именительном падеже.','Может быть выражено инфинитивом.'], a:[0,2,3],
+   hint:'Вспомни предложение «Книгу читает мальчик». Где здесь подлежащее?',
+   ex:'Подлежащее отвечает на вопросы «кто? что?» и стоит в именительном падеже. Его может выражать и инфинитив: «Учиться всегда пригодится». Порядок слов подлежащее не меняет.'},
+  {t:'pd', type:'multi', q:'Найди подлежащее: «Книгу купила мама».',
+   opts:['книгу','купила','мама','книгу купила'], a:[2],
+   hint:'Найди сказуемое и задай от него вопрос «кто? что?». Проверь падеж.',
+   ex:'Купила (кто?) мама — это подлежащее в именительном падеже. «Книгу» стоит в винительном падеже — это дополнение.'},
+  {t:'pd', type:'match', q:'Чем выражено подлежащее?',
+   sub:'Для каждого предложения выбери способ выражения подлежащего.',
+   left:['Утром пошёл снег.','Кто-то оставил записку.','Трое ушли вперёд.','Проигравший пожал руку победителю.','Читать мне всегда нравилось.','Мы с сестрой украсили ёлку.'],
+   right:['числительное','сочетание слов','существительное','инфинитив','местоимение','прилагательное, причастие'],
+   a:[2,4,0,5,3,1],
+   hint:'Сначала найди подлежащее (кто? что?), потом определи, какая это часть речи.',
+   ex:'Снег — существительное; кто-то — местоимение; трое — числительное; проигравший — причастие в значении существительного; читать — инфинитив; мы с сестрой — сочетание слов.'},
+
+  {t:'tr', type:'multi', q:'В каком предложении нужно тире между подлежащим и сказуемым?',
+   opts:['Я художник.','Сосна хвойное дерево.','Озеро как зеркало.','Ветер не помеха.'], a:[1],
+   hint:'Вспомни правило «НЕ — Я — КАК».',
+   ex:'Сосна — хвойное дерево: оба главных члена — существительные в именительном падеже. В остальных тире не ставим: подлежащее — личное местоимение, перед сказуемым КАК, перед сказуемым НЕ.'},
+  {t:'tr', type:'multi', q:'В каких случаях тире между подлежащим и сказуемым НЕ ставится?',
+   opts:['Подлежащее — личное местоимение.','Оба главных члена — существительные в именительном падеже.','Перед сказуемым стоит частица НЕ.','Перед сказуемым стоит союз КАК, СЛОВНО, БУДТО.'], a:[0,2,3],
+   hint:'Тире — это невидимое «есть». В каких случаях «мостик» ломается?',
+   ex:'Тире не ставим: подлежащее — личное местоимение (Я ученик), перед сказуемым НЕ (Лес не парк), перед сказуемым КАК, СЛОВНО, БУДТО (Лицо как маска). Между двумя существительными в И. п. тире нужно.'},
+  {t:'tr', type:'match', q:'Нужно ли тире на месте «…»?',
+   sub:'Для каждого предложения выбери ответ.',
+   left:['Моя задача … помочь другу.','Он … отличный спортсмен.','Пятью пять … двадцать пять.','Море … словно зеркало.','Отдыхать … значит набираться сил.'],
+   right:['Тире нужно','Тире не нужно'],
+   a:[0,1,0,1,0],
+   hint:'Определи, чем выражены подлежащее и сказуемое, и проверь правило «НЕ — Я — КАК».',
+   ex:'Моя задача — помочь другу (сущ. — инфинитив). Он отличный спортсмен (личное местоимение). Пятью пять — двадцать пять (числительные). Море словно зеркало (союз СЛОВНО). Отдыхать — значит набираться сил (перед «значит»).'},
+  {t:'tr', type:'multi', label:'Найди ошибку', q:'Ты — корректор. В каких предложениях тире поставлено неверно?',
+   opts:['Волга — великая русская река.','Она — моя лучшая подруга.','Наша цель — победить.','Этот фильм — не шедевр.'], a:[1,3],
+   hint:'Проверь каждое предложение по правилу «НЕ — Я — КАК».',
+   ex:'«Она моя лучшая подруга» — без тире: подлежащее — личное местоимение. «Этот фильм не шедевр» — без тире: перед сказуемым НЕ. В остальных тире нужно: сущ. — сущ. и сущ. — инфинитив.'}
+];
+
+// === DATA END ===
+
+const N = TASKS.length;
+const KIND = {choice:'Теория', multi:'Теория', match:'Соответствие', input:'Реши', error:'Найди ошибку'};
+const LET = ['А','Б','В','Г','Д','Е'];
+const KEY = 'progress-check-8-rus-b3u2';
+
+// === НАСТРОЙКИ: ссылка на веб-приложение Google-таблицы (оставь пустой, если отправка не нужна) ===
+const SHEET_URL = '';
+const GAME_TITLE = document.title;
+
+function fresh(){ return {phase:'start', i:0, res:{}, hint:{}, err:{}, sel:{}, start:null, name:'', sent:false, sendState:''}; }
+function load(){ try{ const s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+let S = load() || fresh();
+if(!S.sel) S.sel = {};
+if(S.sendState==='sending') S.sendState='';
+const esc = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const fmt = n => String(Math.round(n*100)/100).replace('.', ',');
+const topicOf = id => TOPICS.find(t => t.id === id);
+function parseNum(s){
+  const c = String(s).replace(/\s/g,'').replace(/,/g,'.').replace(/[^0-9.\-]/g,'');
+  if(!c) return NaN;
+  return parseFloat(c);
+}
+const same = (a,b) => Math.abs(a-b) < 1e-9;
+
+function totalPts(){ return Object.values(S.res).reduce((s,r)=>s+r.pts,0); }
+function timeStr(){
+  if(!S.start) return '00:00';
+  const sec = Math.floor((Date.now()-S.start)/1000);
+  return String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
+}
+
+function header(){
+  return `<header class="top">
+    <div><h1 class="title"><span>${GAME_TITLE}</span></h1><p class="subtitle">Progress check · ${SUBTITLE}</p></div>
+    <div class="stats">
+      <div class="pill">Баллы <b>${fmt(totalPts())}</b> из ${N}</div>
+      <div class="pill">Время <b id="timer">${timeStr()}</b> / ${TIME_LIMIT}</div>
+    </div>
+  </header>`;
+}
+
+function strip(){
+  const cur = TASKS[S.i].t;
+  return `<nav class="strip" aria-label="Темы">` + TOPICS.map(tp=>{
+    const idx = TASKS.map((t,i)=>t.t===tp.id?i:-1).filter(i=>i>=0);
+    const done = idx.filter(i=>S.res[i]).length;
+    return `<button class="chip ${tp.id===cur?'active':''}" data-act="goto" data-v="${tp.id}" style="--hl:var(${tp.hl})">
+      <span class="dot"></span>${tp.name}<span class="cnt">${done}/${idx.length}</span></button>`;
+  }).join('') + `<button class="chip" data-act="results">Итоги</button></nav>`;
+}
+
+function startView(){
+  return `<section class="card">
+    <p class="lead">Короткая проверка по теме урока: ${N} вопросов. Виды заданий: «Теория» и «Найди ошибку» — отметь все верные варианты (их может быть несколько) и нажми «Проверить»; «Соответствие» — выбери ответ для каждой строки. В конце увидишь, какие темы освоены, а какие стоит повторить.</p>
+    <ul class="topics">${TOPICS.map(t=>`<li style="--hl:var(${t.hl})"><span class="dot"></span>${t.name}</li>`).join('')}</ul>
+    <p class="sub">Все верные ответы и ни одного лишнего — 1 балл. Отмечены только верные, но не все — ½ балла. Есть лишний ответ — 0. В соответствии: все пары верно — 1 балл, хотя бы половина — ½. С подсказкой баллы делятся пополам.</p>
+    <label class="namefield ${S.nameErr?'err':''}"><span>Как тебя зовут?</span><input id="name" autocomplete="off" placeholder="Имя и фамилия" value="${esc(S.name||'')}"></label>
+    <button class="btn" data-act="begin">${Object.keys(S.res).length ? 'Продолжить' : 'Начать'}</button>
+  </section>`;
+}
+
+function taskView(){
+  const i = S.i, T = TASKS[i], tp = topicOf(T.t), r = S.res[i], used = !!S.hint[i];
+  const tIdx = TASKS.map((t,k)=>t.t===T.t?k:-1).filter(k=>k>=0);
+  let body = '';
+
+  if(T.type==='choice'){
+    body = `<div class="opts">` + T.opts.map((o,k)=>{
+      let cls = '';
+      if(r){ if(k===T.a) cls='right'; else if(k===r.given) cls='wrong'; }
+      return `<button class="opt ${cls}" data-act="opt" data-v="${k}" ${r?'disabled':''}>${o}</button>`;
+    }).join('') + `</div>`;
+  }
+
+  if(T.type==='multi'){
+    const sel = S.sel[i] || [];
+    body = `<div class="opts" role="group">` + T.opts.map((o,k)=>{
+      let cls = '', flag = '';
+      if(r){
+        const picked = r.given.includes(k), right = T.a.includes(k);
+        if(right) cls = 'right'; else if(picked) cls = 'wrong';
+        if(right && !picked) flag = 'не отмечен';
+        if(!right && picked) flag = 'лишний';
+      } else if(sel.includes(k)) cls = 'sel';
+      return `<button class="opt ${cls}" data-act="tog" data-v="${k}" aria-pressed="${sel.includes(k)}" ${r?'disabled':''}><span class="box">${LET[k]}</span><span>${o}</span>${flag?`<span class="flag">${flag}</span>`:''}</button>`;
+    }).join('') + `</div>`;
+    if(!r) body += `<div class="row" style="margin-top:14px"><button class="btn" data-act="mcheck">Проверить</button></div>`;
+    else if(!r.ok) body += `<p class="correct">Правильные ответы: ${T.a.map(k=>LET[k]).join(', ')}</p>`;
+  }
+
+  if(T.type==='match'){
+    const sel = S.sel[i] || [];
+    body = `<div class="opts">` + T.left.map((L,k)=>{
+      let cls = '', c = '';
+      if(r){ const ok = r.given[k]===T.a[k]; cls = ok?'right':'wrong'; if(!ok) c = `<span class="c">Верно: ${T.right[T.a[k]]}</span>`; }
+      const v = sel[k];
+      const opts = `<option value="">— выбери —</option>` + T.right.map((R,j)=>`<option value="${j}" ${v===j?'selected':''}>${R}</option>`).join('');
+      return `<div class="mrow ${cls}"><span class="l">${L}</span><select data-m="${k}" ${r?'disabled':''} aria-label="${L}">${opts}</select>${c}</div>`;
+    }).join('') + `</div>`;
+    if(!r) body += `<div class="row" style="margin-top:14px"><button class="btn" data-act="matchcheck">Проверить</button></div>`;
+  }
+
+  if(T.type==='input'){
+    if(!r) body = `<div class="ansrow"><label class="field"><input id="ans" inputmode="decimal" autocomplete="off" aria-label="Ответ" placeholder="?"><span class="unit">${T.unit||''}</span></label><button class="btn" data-act="check">Проверить</button></div>`;
+    else body = `<p>Ответ: <span class="given" style="background:var(${r.ok?'--hl-green':'--hl-pink'})">${r.given||'—'} ${T.unit||''}</span></p>`;
+  }
+
+  if(T.type==='error'){
+    const e = S.err[i];
+    body = `<div class="opts">` + T.steps.map((s,k)=>{
+      let cls = '', flag = '';
+      if(e){
+        if(k===T.wrong){ cls='right'; flag='ошибка здесь'; }
+        else if(k===e.pick){ cls='wrong'; flag='тут всё верно'; }
+      }
+      return `<button class="step ${cls}" data-act="pick" data-v="${k}" ${e?'disabled':''}><span class="n">${k+1}</span><span class="m">${s}</span>${flag?`<span class="flag">${flag}</span>`:''}</button>`;
+    }).join('') + `</div>`;
+    if(e){
+      body += `<p class="note">${e.ok ? 'Да, ошибка именно в этой строке!' : `Не совсем: ошибка в строке ${T.wrong+1}.`} ${T.fixQ}</p>`;
+      if(!r) body += `<div class="ansrow"><label class="field"><input id="ans" inputmode="decimal" autocomplete="off" aria-label="Правильный ответ" placeholder="?"><span class="unit">${T.fixUnit||''}</span></label><button class="btn" data-act="check">Проверить</button></div>`;
+      else body += `<p>Ответ: <span class="given" style="background:var(${r.fixOk?'--hl-green':'--hl-pink'})">${r.given||'—'} ${T.fixUnit||''}</span></p>`;
+    }
+  }
+
+  let hint = '';
+  if(used) hint = `<div class="hintbox">Подсказка: ${T.hint}</div>`;
+  else if(!r && T.hint) hint = `<div class="row" style="margin-top:16px"><button class="btn ghost small" data-act="hint">Подсказка (−½ балла)</button></div>`;
+
+  let fb = '';
+  if(r){
+    const v = r.status==='ok' ? ['Верно!','--hl-green'] : r.status==='half' ? ['Почти!','--hl-yellow'] : ['Неверно','--hl-pink'];
+    let correct = '';
+    if(T.type==='input' && !r.ok) correct = `Правильный ответ: ${fmt(T.a)} ${T.unit||''}`;
+    if(T.type==='error' && !r.fixOk) correct = `Правильный ответ: ${fmt(T.fixA)} ${T.fixUnit||''}`;
+    fb = `<div class="fb" aria-live="polite">
+      <span class="verdict" style="--vc:var(${v[1]})">${v[0]}</span>
+      ${correct?`<p class="correct">${correct}</p>`:''}
+      <p class="ex">${T.ex}</p>
+    </div>`;
+  }
+
+  return `<section class="card">
+    <div class="meta">
+      <span class="tag" style="--hl:var(${tp.hl})">${tp.name}</span>
+      <span class="kind">${T.label||KIND[T.type]}</span>
+      <span class="num">${tIdx.indexOf(i)+1} из ${tIdx.length} в теме</span>
+    </div>
+    <p class="q">${T.q}</p>
+    ${T.big?`<p class="big">${T.big}</p>`:''}
+    ${T.sub?`<p class="sub">${T.sub}</p>`:''}
+    ${body}
+    ${hint}
+    ${fb}
+    <div class="nav">
+      <button class="btn ghost small" data-act="prev" ${i===0?'disabled':''}>Назад</button>
+      <button class="btn" data-act="next">${i===N-1 ? 'К итогам' : (r ? 'Дальше' : 'Пропустить')}</button>
+    </div>
+  </section>`;
+}
+
+function resultView(){
+  const total = totalPts();
+  const rows = TOPICS.map(tp=>{
+    const idx = TASKS.map((t,i)=>t.t===tp.id?i:-1).filter(i=>i>=0);
+    const pts = idx.reduce((s,i)=>s+(S.res[i]?S.res[i].pts:0),0);
+    const p = pts/idx.length;
+    const v = p>=0.8 ? 'Тема освоена' : p>=0.5 ? 'Есть пробелы — стоит повторить' : 'Нужно разобрать заново';
+    return `<div class="res-row" style="--hl:var(${tp.hl})">
+      <span class="res-name">${tp.name}</span><span class="res-score">${fmt(pts)} / ${idx.length}</span>
+      <div class="bar"><i style="width:${Math.round(p*100)}%"></i></div>
+      <span class="res-v">${v}</span></div>`;
+  }).join('');
+  const list = TASKS.map((T,i)=>{
+    const r = S.res[i];
+    const s = !r ? '—' : r.status==='ok' ? '✓' : r.status==='half' ? '½' : '✗';
+    const short = (T.big ? T.q + ' ' + T.big : T.q).slice(0,70);
+    return `<li><span class="s">${s}</span><span>${short}${short.length>=70?'…':''}</span><span class="kind">${T.label||KIND[T.type]}${S.hint[i]?', подсказка':''}</span></li>`;
+  }).join('');
+  return `<section class="card">
+    <p class="total">${fmt(total)} из ${N}</p>
+    <p class="sub">${S.name?esc(S.name)+'. ':''}Время: ${timeStr()}. Ответов: ${Object.keys(S.res).length} из ${N}.</p>
+    ${SHEET_URL ? `<div class="send" aria-live="polite"><span>${S.sendState==='sending'?'Отправляю результат…':S.sendState==='ok'?'Результат отправлен учителю ✓':S.sendState==='err'?'Не получилось отправить. Проверь интернет и нажми ещё раз.':'Результат ещё не отправлен.'}</span>${S.sendState==='sending'?'':`<button class="btn ghost small" data-act="send">${S.sendState==='ok'?'Отправить ещё раз':'Отправить учителю'}</button>`}</div>` : ''}
+    <div class="res">${rows}</div>
+    <details><summary>Все задания</summary><ul class="tlist">${list}</ul></details>
+    <div class="nav">
+      <button class="btn ghost" data-act="back">Вернуться к заданиям</button>
+      <button class="btn" data-act="restart">Пройти заново</button>
+    </div>
+  </section>`;
+}
+
+function render(){
+  const app = document.getElementById('app');
+  let html = header();
+  if(S.phase==='start') html += startView();
+  else if(S.phase==='task') html += strip() + taskView();
+  else html += resultView();
+  app.innerHTML = html;
+  save();
+  const inp = app.querySelector('#ans');
+  if(inp) inp.focus({preventScroll:true});
+}
+
+function score(i, correct){
+  const cap = S.hint[i] ? 0.5 : 1;
+  return correct * cap;
+}
+function statusOf(i, pts){
+  if(pts===1) return 'ok';
+  if(pts>0) return 'half';
+  return 'bad';
+}
+
+function act(a, v){
+  const i = S.i, T = TASKS[i];
+  if(a==='begin'){
+    const ni = document.getElementById('name');
+    const nm = ni ? ni.value.trim() : S.name;
+    if(!nm){ S.nameErr = true; render(); const f=document.getElementById('name'); if(f) f.focus(); return; }
+    S.name = nm; S.nameErr = false;
+    S.phase='task'; if(!S.start) S.start = Date.now();
+    const first = TASKS.findIndex((t,k)=>!S.res[k]); S.i = first<0 ? 0 : first;
+  }
+  else if(a==='opt' && !S.res[i]){
+    const k = +v, ok = k===T.a, pts = score(i, ok?1:0);
+    S.res[i] = {given:k, ok, pts, status:statusOf(i,pts)};
+  }
+  else if(a==='tog' && !S.res[i]){
+    const k = +v, cur = S.sel[i] || [];
+    S.sel[i] = cur.includes(k) ? cur.filter(x=>x!==k) : cur.concat(k).sort();
+  }
+  else if(a==='matchcheck' && !S.res[i]){
+    const g = T.left.map((_,k)=>{ const v=(S.sel[i]||[])[k]; return (v===undefined||v===null)?-1:v; });
+    if(g.some(v=>v<0)){ alert('Выбери пару для каждой строки.'); return; }
+    const right = g.filter((v,k)=>v===T.a[k]).length;
+    const ok = right===T.left.length;
+    const pts = score(i, ok ? 1 : (right*2>=T.left.length ? 0.5 : 0));
+    S.res[i] = {given:g, ok, pts, status:statusOf(i,pts)};
+  }
+  else if(a==='mcheck' && !S.res[i]){
+    const g = (S.sel[i] || []).slice().sort();
+    if(!g.length) return;
+    const wrongPick = g.some(k=>!T.a.includes(k));
+    const ok = !wrongPick && g.length===T.a.length;
+    const part = ok ? 1 : (!wrongPick ? 0.5 : 0);
+    const pts = score(i, part);
+    S.res[i] = {given:g, ok, pts, status:statusOf(i,pts)};
+  }
+  else if(a==='pick' && !S.err[i]){
+    S.err[i] = {pick:+v, ok:+v===T.wrong};
+  }
+  else if(a==='check' && !S.res[i]){
+    const inp = document.getElementById('ans'); if(!inp) return;
+    const raw = inp.value.trim(); if(!raw){ inp.focus(); return; }
+    const val = parseNum(raw);
+    if(T.type==='input'){
+      const ok = same(val, T.a), pts = score(i, ok?1:0);
+      S.res[i] = {given:raw, ok, pts, status:statusOf(i,pts)};
+    } else if(T.type==='error'){
+      const e = S.err[i], fixOk = same(val, T.fixA);
+      const pts = score(i, (e.ok?0.5:0) + (fixOk?0.5:0));
+      S.res[i] = {given:raw, fixOk, ok:e.ok&&fixOk, pts, status:statusOf(i,pts)};
+    }
+  }
+  else if(a==='hint'){ S.hint[i] = true; }
+  else if(a==='send'){ sendResults(); return; }
+  else if(a==='next'){ if(i<N-1) S.i++; else S.phase='result'; window.scrollTo({top:0}); }
+  else if(a==='prev'){ if(i>0) S.i--; }
+  else if(a==='goto'){
+    const idx = TASKS.map((t,k)=>t.t===v?k:-1).filter(k=>k>=0);
+    const open = idx.find(k=>!S.res[k]); S.i = open!==undefined ? open : idx[0];
+  }
+  else if(a==='results'){ S.phase='result'; }
+  else if(a==='back'){
+    S.phase='task'; const first = TASKS.findIndex((t,k)=>!S.res[k]); if(first>=0) S.i = first;
+  }
+  else if(a==='restart'){
+    if(!confirm('Сбросить все ответы и начать заново?')) return;
+    S = fresh();
+  }
+  render();
+  if(S.phase==='result' && SHEET_URL && !S.sent) sendResults();
+}
+
+function buildPayload(){
+  const topics = TOPICS.map(tp=>{
+    const idx = TASKS.map((t,k)=>t.t===tp.id?k:-1).filter(k=>k>=0);
+    const pts = idx.reduce((s,k)=>s+(S.res[k]?S.res[k].pts:0),0);
+    return {name:tp.name, score:fmt(pts)+' из '+idx.length};
+  });
+  const mistakes = TASKS.map((T,k)=>{
+    const r = S.res[k];
+    if(r && r.status==='ok') return null;
+    const short = (T.big ? T.q+' '+T.big : T.q).slice(0,60);
+    let given = '';
+    if(r){
+      if(T.type==='choice') given = T.opts[r.given];
+      else if(T.type==='multi') given = r.given.map(k=>LET[k]).join(', ');
+      else if(T.type==='match') given = 'верных пар: '+r.given.filter((v,j)=>v===T.a[j]).length+' из '+T.left.length;
+      else if(T.type==='error') given = 'строка '+(S.err[k].pick+1)+', ответ '+r.given;
+      else given = r.given;
+    }
+    const st = !r ? 'пропущено' : r.status==='half' ? 'частично' : 'неверно';
+    return (k+1)+'. '+short+' — '+st+(given?' ('+given+')':'')+(S.hint[k]?', с подсказкой':'');
+  }).filter(Boolean).join('\n');
+  return {game:GAME_TITLE, name:S.name||'Без имени', total:totalPts(), max:N, time:timeStr(), topics, mistakes};
+}
+
+function sendResults(){
+  if(!SHEET_URL || S.sendState==='sending') return;
+  S.sent = true; S.sendState = 'sending'; render();
+  fetch(SHEET_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(buildPayload())})
+    .then(()=>{ S.sendState='ok'; render(); })
+    .catch(()=>{ S.sendState='err'; render(); });
+}
+
+document.getElementById('app').addEventListener('click', e=>{
+  const b = e.target.closest('[data-act]'); if(!b || b.disabled) return;
+  act(b.dataset.act, b.dataset.v);
+});
+document.getElementById('app').addEventListener('change', e=>{
+  const el = e.target; if(!el.matches('select[data-m]')) return;
+  const i = S.i; if(S.res[i]) return;
+  const arr = (S.sel[i] || []).slice(); arr[+el.dataset.m] = el.value==='' ? null : +el.value;
+  S.sel[i] = arr; save();
+});
+document.getElementById('app').addEventListener('keydown', e=>{
+  if(e.key==='Enter' && e.target.id==='ans'){ e.preventDefault(); act('check'); }
+});
+setInterval(()=>{ const t = document.getElementById('timer'); if(t) t.textContent = timeStr(); }, 1000);
+render();
+</script>
+</body>
+</html>

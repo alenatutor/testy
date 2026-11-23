@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Геометрия 8 · Квест «Ремонт в квартире»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6fc;--surface:#fff;--surface-2:#e9effa;--ink:#16233d;--ink-2:#3e4f6e;--muted:#7a88a3;--line:#d3ddef;--acc:#2a5bd7;--acc-d:#1d47b3;--acc-dk:#1d43a6;--acc2:#f0841f;--soft:#e2eafc;--good:#1c9a5f;--bad:#d9434c;--warn:#ffc23d;--warn-bg:#fff5dc;--hl:#ffe2c4;--hero-c:#173a7a;--shadow:0 10px 30px rgba(22,35,61,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1626;--surface:#16213a;--surface-2:#1b2946;--ink:#eaf0ff;--ink-2:#bccaea;--muted:#8796b8;--line:#2b3c60;--acc:#5b86f0;--acc-d:#3d68d6;--acc-dk:#9fb9ff;--acc2:#ff9d45;--soft:#22345a;--good:#45d18e;--bad:#ff6b72;--warn:#ffcf5c;--warn-bg:#3a3220;--hl:#4d3420;--shadow:0 10px 30px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0e1626;--surface:#16213a;--surface-2:#1b2946;--ink:#eaf0ff;--ink-2:#bccaea;--muted:#8796b8;--line:#2b3c60;--acc:#5b86f0;--acc-d:#3d68d6;--acc-dk:#9fb9ff;--acc2:#ff9d45;--soft:#22345a;--good:#45d18e;--bad:#ff6b72;--warn:#ffcf5c;--warn-bg:#3a3220;--hl:#4d3420;--shadow:0 10px 30px rgba(0,0,0,.35)}
+body{background:var(--bg)}
+
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,sans-serif;font-weight:600;font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4{line-height:1.2;font-weight:900}
+.wrap{max-width:1040px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left))}
+/* hero */
+.cover{background:var(--hero-c) url("") center/cover no-repeat;padding:40px 0 56px;color:#1b2b3a}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:900;font-size:15px;letter-spacing:.05em}
+.logo i{width:30px;height:30px;border-radius:50%;background:var(--acc);display:grid;place-items:center}
+.logo img{width:18px;height:18px}
+.title-box{background:rgba(255,255,255,.95);border-radius:20px;padding:24px 28px;max-width:620px;margin:20px 0 16px;box-shadow:0 14px 36px rgba(0,0,0,.10)}
+.title-box small{font-weight:900;font-size:clamp(22px,4vw,30px);display:block}
+.title-box h1{font-size:clamp(21px,3.6vw,28px);color:var(--acc-d);margin-top:6px}
+.title-box hr{border:none;height:4px;width:90px;border-radius:4px;background:var(--acc);margin-top:16px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pill{background:#fff;border-radius:999px;padding:7px 16px;font-weight:900;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.timer{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:5px 6px 5px 16px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.t-time{font-weight:900;font-size:21px;font-variant-numeric:tabular-nums;color:#1b2b3a}
+.t-label{font-size:13px;font-weight:900;color:var(--acc-dk)}
+.round{width:38px;height:38px;border-radius:50%;border:none;background:var(--acc);color:#fff;font-weight:900;cursor:pointer}
+.round.soft{background:#eef2f6;color:#1b2b3a}
+nav.bar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.bar .wrap{display:flex;align-items:center;gap:10px;height:58px}
+.links{display:flex;gap:4px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+.links::-webkit-scrollbar{display:none}
+.links a{white-space:nowrap;text-decoration:none;color:var(--ink-2);padding:6px 11px;border-radius:999px;font-size:14px;font-weight:800}
+.links a:hover{background:var(--soft)}
+.links a.now{background:var(--acc);color:#fff}
+.score{flex:none;background:var(--acc2);color:#fff;border-radius:999px;padding:6px 14px;font-weight:900;font-size:15px;font-variant-numeric:tabular-nums}
+.progress{height:4px;background:var(--line)}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .4s}
+section{padding:42px 0}
+section.alt{background:var(--surface-2)}
+section.bgimg{background:var(--surface-2) url("") center/cover}
+:root[data-theme="dark"] section.bgimg{background:var(--surface-2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) section.bgimg{background:var(--surface-2)}}
+.kicker{font-size:12.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--acc-dk)}
+.sec-title{font-size:clamp(24px,4.4vw,34px);margin:6px 0 16px}
+.lead{color:var(--ink-2);margin:-6px 0 16px;max-width:780px}
+.card{background:var(--surface);border-radius:20px;padding:20px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:16px}
+.btn{border:none;background:var(--acc);color:#fff;border-radius:999px;padding:10px 20px;font-weight:900;cursor:pointer;font-size:15.5px}
+.btn.alt2{background:var(--acc2)}
+.btn.ghost{background:var(--surface);color:var(--acc-dk);border:2px solid var(--line)}
+.btn.sm{padding:7px 14px;font-size:14px}
+.btn:disabled{opacity:.4;cursor:default}
+.fb{font-weight:900}
+.fb.good{color:var(--good)} .fb.meh{color:var(--bad)}
+.ok{outline:3px solid var(--good)!important;outline-offset:2px}
+.bad{outline:3px solid var(--bad)!important;outline-offset:2px;animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.rows{display:grid;gap:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:var(--surface-2);border-radius:14px;padding:10px 12px;border:2px solid transparent}
+.row .s{flex:1;min-width:200px}
+.n{color:var(--acc-dk);font-weight:900;margin-right:6px}
+.choice-group{display:flex;flex-wrap:wrap;gap:6px}
+.opt{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:800;font-size:15px}
+.opt:hover{border-color:var(--acc)}
+.opt.sel{background:var(--acc);border-color:var(--acc);color:#fff}
+.stack{flex-direction:column;align-items:stretch;width:100%}
+.stack .opt{border-radius:12px;text-align:left}
+.why{display:none;width:100%;font-size:14.5px;color:var(--ink-2);background:var(--soft);border-radius:10px;padding:6px 10px}
+.task.show .why{display:block}
+input.ans{font:inherit;font-weight:900;font-size:17px;width:110px;border:2px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--surface);color:var(--ink);text-align:center}
+input.ans:focus{outline:none;border-color:var(--acc)}
+select.sel{font:inherit;font-weight:800;border:2px solid var(--line);border-radius:10px;padding:5px 8px;background:var(--surface);color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.two>*{min-width:0}
+@media (max-width:800px){.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid3>*{min-width:0}
+@media (max-width:800px){.grid3{grid-template-columns:1fr}}
+.def{background:var(--soft);border-radius:14px;padding:12px 16px;margin-bottom:12px}
+.def b{color:var(--acc-dk)}
+.tip{background:var(--warn-bg);border-left:5px solid var(--warn);border-radius:10px;padding:8px 12px;margin-top:12px;font-size:15.5px}
+.chip-st{background:var(--soft);color:var(--acc-dk);font-weight:900;border-radius:999px;padding:4px 12px;font-size:14px;font-variant-numeric:tabular-nums;display:inline-block}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px}
+.plan a{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.plan a .num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:#fff;font-weight:900;font-size:13px;flex:none}
+.plan a:nth-child(even) .num{background:var(--acc2)}
+.plan a b{flex:1;font-size:14.5px}
+.plan a .m{font-size:12.5px;font-weight:900;color:var(--acc-dk);background:var(--soft);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.players{display:flex;gap:10px;flex-wrap:wrap}
+.pl{flex:1;min-width:140px;border:2px solid var(--line);border-radius:16px;padding:10px 14px;background:var(--surface);text-align:center}
+.pl b{display:block;font-size:15px}
+.pl span{font-size:28px;font-weight:900;color:var(--acc-dk);font-variant-numeric:tabular-nums}
+.pl.turn{border-color:var(--acc);box-shadow:0 0 0 4px var(--soft)}
+.refl textarea{width:100%;min-height:60px;font:inherit;border:2px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface);color:var(--ink);resize:vertical}
+table.kop{width:100%;border-collapse:collapse;font-size:15px}
+table.kop th{background:var(--soft);color:var(--acc-dk);text-align:left;padding:7px 8px}
+table.kop td{padding:6px 8px;border-bottom:1px solid var(--line)}
+table.kop td.c{text-align:center;font-weight:900}
+table.kop tr.tot td{font-weight:900;border-top:2px solid var(--acc)}
+.rank{text-align:center;font-weight:900;margin-top:10px;color:var(--acc-dk)}
+footer{text-align:center;color:var(--muted);font-size:14px;padding:26px 16px 90px}
+.conf{position:fixed;left:0;top:0;pointer-events:none;z-index:200;font-size:20px}
+/* доска */
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:40;border:none;border-radius:999px;background:var(--acc2);color:#fff;font-weight:900;padding:13px 18px;box-shadow:0 10px 24px rgba(0,0,0,.2);cursor:pointer;font-size:15.5px}
+.board{position:fixed;inset:0;z-index:60;background:rgba(10,20,35,.55);display:none;padding:12px}
+.board.on{display:flex}
+.b-in{background:#fff;color:#1b2b3a;border-radius:18px;flex:1;display:flex;flex-direction:column;overflow:hidden}
+.b-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;border-bottom:1px solid #e3e8ee;background:#f6f8fb}
+.b-bar .ttl{font-weight:900;font-size:14px;margin-right:auto;padding:0 6px}
+.tb{border:2px solid #e3e8ee;background:#fff;border-radius:10px;min-width:38px;height:38px;padding:0 9px;cursor:pointer;font-weight:900;color:#1b2b3a;font-size:14px}
+.tb.sel{border-color:#1b2b3a;background:#eef2f6}
+.sw{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #e3e8ee;cursor:pointer;padding:0}
+.sw.sel{box-shadow:0 0 0 3px #1b2b3a}
+.b-sep{width:1px;height:28px;background:#e3e8ee;margin:0 2px}
+.b-area{position:relative;flex:1;touch-action:none;background:#fff;background-image:linear-gradient(#edf1f5 1px,transparent 1px),linear-gradient(90deg,#edf1f5 1px,transparent 1px);background-size:28px 28px}
+.b-area canvas{position:absolute;inset:0;width:100%;height:100%}
+#cvTop{cursor:crosshair}
+
+.cover.geo{background-color:#173a7a;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:80px 80px,80px 80px,16px 16px,16px 16px;color:#fff;position:relative;overflow:hidden}
+.cover.geo .logo{color:#fff}
+.cover.geo .logo i{background:var(--acc2)}
+.cover.geo .title-box{position:relative;z-index:1}
+.cover.geo .title-box h1{color:#1d47b3}
+.cover.geo .title-box hr{background:#f0841f}
+.cover.geo .deco{position:absolute;right:4%;top:28px;width:min(300px,34vw);opacity:.9;pointer-events:none}
+@media (max-width:700px){.cover.geo .deco{display:none}}
+.plan-svg{width:100%;max-width:560px;display:block;margin:0 auto}
+.room{cursor:pointer}
+.room rect{fill:var(--surface);stroke:var(--ink);stroke-width:4;transition:fill .3s}
+.room text{fill:var(--ink);font-family:Nunito,system-ui,sans-serif;font-weight:900;text-anchor:middle}
+.room .rn{font-size:15px}.room .rs{font-size:13px;fill:var(--muted)}.room .ri{font-size:22px}
+.room.done rect{fill:color-mix(in srgb,var(--good) 22%,var(--surface))}
+.room.done .rs{fill:var(--good)}
+.room:hover rect{fill:var(--soft)}
+.door{stroke:var(--surface);stroke-width:6}
+.rules li{margin:4px 0 4px 20px}
+.ranks6{display:grid;gap:6px}
+.ranks6 div{display:flex;justify-content:space-between;gap:10px;background:var(--surface-2);border-radius:10px;padding:7px 12px;font-weight:800}
+.ranks6 div.on{background:var(--acc2);color:#fff}
+.fs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.fs div{background:var(--soft);border-radius:12px;padding:10px 12px}
+.fs b{display:block;color:var(--acc-dk);font-size:14px}
+.fs .f{font-family:"Times New Roman",Georgia,serif;font-size:21px}
+details.cheat{background:var(--warn-bg);border-radius:12px;padding:8px 14px;margin-bottom:14px}
+details.cheat summary{font-weight:900;cursor:pointer}
+details.cheat .fs{margin-top:8px}
+.st-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:-4px 0 14px}
+.st-pts{background:var(--acc2);color:#fff;border-radius:999px;padding:5px 14px;font-weight:900}
+.tasks{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.tasks{grid-template-columns:1fr}}
+.tk{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.tk .no{font-weight:900;color:var(--acc-dk);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.tk .q{font-weight:700}
+.tk svg{width:100%;max-width:320px;height:auto;align-self:center}
+.tk .trow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tk .hint,.tk .sol{display:none;font-size:15px;border-radius:10px;padding:7px 10px}
+.tk .hint{background:var(--warn-bg)}
+.tk .sol{background:var(--soft)}
+.tk.h .hint,.tk.fin .sol{display:block}
+.tk.win{border-color:var(--good)}
+.tk.lose{border-color:var(--bad)}
+.tk .pt{margin-left:auto;font-weight:900;font-variant-numeric:tabular-nums}
+.tk.win .pt{color:var(--good)}.tk.lose .pt{color:var(--bad)}
+.tk .msg{font-weight:800;font-size:14.5px}
+svg .fg{fill:color-mix(in srgb,var(--acc) 14%,transparent);stroke:var(--acc);stroke-width:3;stroke-linejoin:round}
+svg .fg2{fill:color-mix(in srgb,var(--acc2) 18%,transparent);stroke:var(--acc2);stroke-width:3}
+svg .dsh{stroke:var(--acc2);stroke-width:2.5;stroke-dasharray:6 5;fill:none}
+svg .ln{stroke:var(--ink-2);stroke-width:2;fill:none}
+svg .gr{stroke:var(--line);stroke-width:1}
+svg text{fill:var(--ink);font-family:Nunito,system-ui,sans-serif;font-weight:900;font-size:15px}
+svg text.v{font-size:13px;fill:var(--ink-2)}
+svg .pt0{fill:var(--ink)}
+.ptab{width:100%;border-collapse:separate;border-spacing:4px;font-size:15px}
+.ptab th{font-size:13px;color:var(--acc-dk);padding:4px 2px}
+.ptab td.pr{font-weight:800;padding:6px 8px;background:var(--surface-2);border-radius:10px;min-width:170px}
+.ptab td.c{text-align:center}
+.ptab button{width:44px;height:40px;border-radius:10px;border:2px solid var(--line);background:var(--surface);font-size:20px;font-weight:900;cursor:pointer;color:var(--good)}
+.ptab button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.ptab button.ok{box-shadow:0 0 0 3px var(--good)}
+.ptab button.bad{box-shadow:0 0 0 3px var(--bad)}
+.ptab td.res{font-weight:900;text-align:center;width:40px}
+.tbl-wrap{overflow-x:auto}
+.figs{display:flex;gap:4px;justify-content:center;align-items:end}
+.safe{display:flex;flex-direction:column;align-items:center;gap:12px;background:linear-gradient(160deg,#3a4a66,#1f2a40);border-radius:24px;padding:22px 16px;color:#fff;max-width:420px;margin:0 auto 16px}
+.safe .ic{font-size:64px;line-height:1;transition:transform .4s}
+.safe.open .ic{animation:pop .7s}
+.dials{display:flex;gap:8px}
+.dial{min-width:58px;height:66px;border-radius:12px;background:#0f1729;border:3px solid #5d6f95;display:grid;place-items:center;font-size:28px;font-weight:900;font-variant-numeric:tabular-nums}
+.dial.ok{border-color:#45d18e;color:#45d18e}.dial.bad{border-color:#ff6b72;color:#ff6b72}
+.safe .sfb{font-weight:900;text-align:center}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.35) rotate(-8deg)}100%{transform:scale(1)}}
+table.gsc{width:100%;min-width:560px;border-collapse:collapse;font-size:14.5px}
+table.gsc th{background:var(--acc);color:#fff;padding:6px}
+table.gsc td{border:1px solid var(--line);padding:4px;text-align:center}
+table.gsc input{width:100%;min-width:34px;border:none;background:transparent;text-align:center;font:inherit;font-weight:800;color:var(--ink)}
+table.gsc td.nm input{text-align:left}
+table.gsc td.tot{font-weight:900;color:var(--acc-dk)}
+.myrank{font-size:22px;font-weight:900;text-align:center;margin:6px 0}
+
+</style>
+</head>
+<body>
+<header class="cover geo">
+  <div class="wrap">
+    <svg class="deco" viewBox="0 0 300 200" aria-hidden="true" fill="none" stroke="#fff" stroke-width="3"><path d="M10 190 H290 V60 L150 10 L10 60 Z"/><path d="M10 60 H290 M120 190 V120 H180 V190 M40 90 H100 V140 H40 Z M200 90 H260 V140 H200 Z"/><path stroke="#f0841f" stroke-dasharray="8 6" d="M40 165 H100 M70 90 V140"/></svg>
+    <span class="logo"><i><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAEOklEQVR42u2dTWgcZRzGf/80qbb222isH1FMkbaxUkFFRawigqIgiIIXe6peepFePXssiB8XgyAUT1YRLyIWq2JRpEUs0YixNo21bUpM06TG1iZ5PLxv7Bp323x0dzbJ84M57M7sMPv83pl5Zw/7gDHGGGMKISa/ISmAVXndOeBcRIw6qioLkLQGeBF4Crg5rxsBzgCngQGgHzgJHM/LCaAPOAUMWlR5JDUCK4CrgRbgOuB6oCXyBpuAd4FNM9j/WWAwi/kNOAz8nJce4FhEDC+QoJcDa/MAXg+05aUVaAZWA0v+cwZIagH2AhuqcExn8xlyCOgEvgMOAoci4vQcD3slcCtwB3An0A6sy6P7yilfgiTtBHbU8NjHgN+BLmAf8DVwMCJO1nng1+YrxP3AfcDt+TKyaFb3AEm9wE0Ff78+4ADwWT4bOyPi74IDX5xH9cN5uTtfvy/vTVjSGNBQR4NtFPgB+AT4ENgfEedrFHoTcFeeiDwGbASaqjoLkqQ6PvPHge+B94DdEdFdpeDXAc8AzwKbazkg611AKcPAx0AHsDcixmYZekO+tLwAPJ6nibV/DphDAkr5EngV+Gi6IiQtAp4EXgIeKvxBbI4KmOBz4JWI2DPF8B8BXs4jvz6ehOe4gIlp7S5gR0ScqhD8amAnsHW200YLqMzbEbGtgoAOYFtd/hY0jwScANZPfsLOT6xd+SeCuqOB+UNThTl7E7C4Xg96PgnQDNdZwELGAizAAowFWICxAAswFmABxgIswFiABRgLsABjARZgLMACjAVYgLEACzAWYAHGAizAWIAFGAuwAGMBFmAswAKMBViAsQALMBZgAcYCLMBYgAUYC7AAYwEWYCzAAowFWIC5iIAxx1CsgB7HUKyAdxxDsQJeI5XpmCIERMQQ8Bywx3HUnkaAiDgq6QlSj8rTpD6s5cBVpE6sK6bTjWWYeZck/FvzMRH8UmAZF6r4riGVla0l9WjdkF+vAVYWOLXtBzZERP+k79JM+vv6ZoorIhrKx9dH+pv9o6Qutb7GslZSL8ufeRng0tUgS0kFoBM1fm2kKr/bgFtI/VtN83wwn8/h9gI/Ad3AL3mW2QcMRMRI2UvQrE+jtOMR4BipkK1UzirgxixkM6n2b2N+r3GOhj1a0gZ4gFTP2AX0TreiseoBRMQgqeyzE9hdUnrZRmqnewC4J993Guu4p6Yb2A98BXxL6sMcqso9gNrXBi7JZaJbgEeBe0nNo0XeAwaBb4BPgS+AHyPiLxZILWyrpOclfSBpQFOjP4c9eV/Ned1U+EPS+5K2Smr1HO2CjO2S9kkav0h4x3Nhz/9qZ/O6SoznfW936JdowJO0RdIuSWfKBNmR69jLffatMtsP5309mKfdZhoy2iW9IemwpCOS3syzrYrly3n7Hkm/SnpdUruTvAwV4pJWTHP7ZU7OGGOMMfwDtANPOENHUt4AAAAASUVORK5CYII=" alt=""></i>ГЕОМЕТРИЯ · 8 КЛАСС</span>
+    <div class="title-box"><small>ТЕМА УРОКА:</small><h1>Квест «Ремонт в квартире»: площади многоугольников</h1><hr></div>
+    <div class="pills"><span class="pill">Игровой урок · 60 минут · максимум 20 баллов</span><div class="timer"><span class="t-label" id="tLabel">урок</span><span class="t-time" id="tTime">00:00</span><button class="round" id="tStart" type="button" aria-label="Запустить или поставить на паузу таймер">▶</button><button class="round soft" id="tReset" type="button" aria-label="Сбросить таймер">↺</button></div></div>
+  </div>
+</header>
+<nav class="bar"><div class="wrap"><div class="links" id="navLinks"><a href="#start">Старт</a><a href="#s1">🚪 Прихожая</a><a href="#s2">🍳 Кухня</a><a href="#s3">🛋️ Гостиная</a><a href="#s4">🧸 Детская</a><a href="#s5">🔐 Сейф</a><a href="#finish">Итоги</a></div><span class="score">⭐ <span id="scoreNow">0</span> / <span id="scoreMax">0</span></span></div><div class="progress"><i id="progressFill"></i></div></nav>
+<main>
+<section id="start">
+  <div class="wrap">
+    <p class="kicker">Квест · 60 минут · каждый сам за себя</p>
+    <h2 class="sec-title">👷 Ремонт в квартире</h2>
+    <div class="two">
+      <div class="card" style="margin:0">
+        <p>Вы — бригада архитекторов, но баллы у каждого свои. В квартире <b>5 комнат</b>. В каждой комнате 4 задания, за каждое — <b>1 балл</b>. Максимум — <b>20 баллов</b>.</p>
+        <ul class="rules" style="margin-top:10px">
+          <li>Верно с первой попытки — <b>1 балл</b>.</li>
+          <li>Ошиблись — есть вторая попытка, она стоит <b>½ балла</b>.</li>
+          <li>💡 Подсказка прораба — задание стоит <b>½ балла</b>.</li>
+          <li>После ответа появляется решение — разбираем ошибки сразу.</li>
+          <li>Ответ — только число, без единиц измерения. Дробь пишем через запятую: 2,5.</li>
+        </ul>
+        <p style="margin-top:10px;color:var(--muted);font-size:14.5px">✏️ «Черновик» в углу — для вычислений и чертежей.</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h3 style="font-size:18px;margin-bottom:4px">План квартиры</h3>
+        <p style="font-size:14.5px;color:var(--muted);margin-bottom:8px">Нажмите на комнату, чтобы перейти к ней. Готовые комнаты станут зелёными.</p>
+        <svg class="plan-svg" id="planSvg" viewBox="0 0 404 244" role="img" aria-label="План квартиры из пяти комнат"></svg>
+        <p class="myrank" id="myRank" style="font-size:17px;margin-top:8px"></p>
+      </div>
+    </div>
+    <div class="two" style="margin-top:18px">
+      <div class="card" style="margin:0">
+        <h3 style="font-size:18px;margin-bottom:8px">📐 Шпаргалка прораба</h3>
+        <div class="fs" id="cheatAll"></div>
+      </div>
+      <div class="card" style="margin:0">
+        <h3 style="font-size:18px;margin-bottom:8px">Звания</h3>
+        <div class="ranks6" id="ranks"><div data-min="18"><span>18–20 баллов</span><span>🏆 Главный архитектор</span></div><div data-min="14"><span>14–17½</span><span>👷 Прораб</span></div><div data-min="10"><span>10–13½</span><span>🔨 Мастер</span></div><div data-min="0"><span>меньше 10</span><span>🧰 Стажёр</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div id="stations"></div>
+
+<section id="finish" class="alt"><div class="wrap">
+  <p class="kicker">Итоги квеста</p><h2 class="sec-title">🏁 Ремонт закончен!</h2>
+  <div style="max-width:640px">
+    <div class="card" style="margin:0">
+      <p class="myrank" id="finRank">Сначала пройдите комнаты 🙂</p>
+      <table class="kop" style="margin-top:8px"><thead><tr><th>Комната</th><th>Макс.</th><th>Баллы</th></tr></thead><tbody id="kop"></tbody></table>
+      <p class="rank" id="rank" style="display:none"></p>
+      <p style="font-weight:900;margin:14px 0 6px">Какая формула сегодня далась труднее всего?</p>
+      <div class="choice-group nochk" id="hard"><button type="button" class="opt">квадрат и прямоугольник</button><button type="button" class="opt">параллелограмм</button><button type="button" class="opt">ромб</button><button type="button" class="opt">треугольник</button><button type="button" class="opt">свойства четырёхугольников</button><button type="button" class="opt">всё легко 😎</button></div>
+      <div class="actions" style="justify-content:center"><button class="btn ghost" type="button" onclick="location.reload()">Пройти квест заново</button></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+      <h3 style="font-size:18px;margin-bottom:4px">📋 Таблица результатов (для учителя)</h3>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:8px">Впишите баллы каждого ученика по комнатам — итог и звание посчитаются сами. Можно писать 3,5.</p>
+      <div class="tbl-wrap"><table class="gsc" id="gsc"><thead><tr><th>Ученик</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>Итого</th><th>Звание</th></tr></thead><tbody></tbody></table></div>
+    </div>
+</div></section>
+
+</main>
+<footer>ГЕОМЕТРИЯ · 8 КЛАСС · Игровой урок · 60 минут · максимум 20 баллов</footer>
+<button class="fab" type="button" id="fab">✏️ Черновик</button>
+<div class="board" id="board" role="dialog" aria-modal="true" aria-label="Черновик для записей">
+  <div class="b-in">
+    <div class="b-bar">
+      <span class="ttl" id="bTitle">Черновик</span>
+      <button class="tb sel" type="button" data-tool="pen" title="Ручка">✏️</button>
+      <button class="tb" type="button" data-tool="line" title="Прямая линия">📏</button>
+      <button class="tb" type="button" data-tool="eraser" title="Ластик">🧽</button>
+      <span class="b-sep"></span>
+      <button class="sw sel" type="button" data-c="#1b2b3a" style="background:#1b2b3a" aria-label="Тёмный"></button>
+      <button class="sw" type="button" data-c="#2f7fd0" style="background:#2f7fd0" aria-label="Синий"></button>
+      <button class="sw" type="button" data-c="#e0464e" style="background:#e0464e" aria-label="Красный"></button>
+      <button class="sw" type="button" data-c="#1f9e8a" style="background:#1f9e8a" aria-label="Зелёный"></button>
+      <span class="b-sep"></span>
+      <button class="tb" type="button" data-w="2">тонко</button>
+      <button class="tb sel" type="button" data-w="4">средне</button>
+      <button class="tb" type="button" data-w="8">толсто</button>
+      <span class="b-sep"></span>
+      <button class="tb" type="button" id="bUndo" title="Отменить">↶</button>
+      <button class="tb" type="button" id="bClear" title="Очистить">🗑</button>
+      <button class="tb" type="button" id="bClose" title="Закрыть" style="background:#1b2b3a;color:#fff;border-color:#1b2b3a">✕</button>
+    </div>
+    <div class="b-area" id="bArea"><canvas id="cvTop"></canvas></div>
+  </div>
+</div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const norm=s=>String(s).toLowerCase().replace(/ё/g,'е').replace(/\s+/g,'').replace(/°/g,'').replace(/,/g,'.').replace(/[−–]/g,'-').replace(/[·*]/g,'').replace(/sqrt|кор/g,'√').trim();
+function sameAns(v,a){return String(a).split('|').some(x=>{const nx=norm(x),nv=norm(v);if(nv==='')return false;if(/^-?\d+(\.\d+)?$/.test(nx))return Math.abs(parseFloat(nv)-parseFloat(nx))<1e-9&&/^-?\d+(\.\d+)?$/.test(nv);return nv===nx;});}
+function flag(el,ok){el.classList.remove('ok','bad');void el.offsetWidth;el.classList.add(ok?'ok':'bad');}
+function burst(el){if(reduceMotion||!el)return;const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,sym=window.BURST||['⭐','✨','🎉','💫','🏆'];
+  for(let i=0;i<14;i++){const s=document.createElement('span');s.className='conf';s.textContent=sym[i%sym.length];document.body.appendChild(s);const a=Math.random()*Math.PI*2,d=60+Math.random()*90;
+    s.animate([{transform:`translate(${cx}px,${cy}px) scale(.6)`,opacity:1},{transform:`translate(${cx+Math.cos(a)*d}px,${cy+Math.sin(a)*d-40}px) scale(1.1)`,opacity:0}],{duration:900+Math.random()*400,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>s.remove();}}
+/* баллы */
+const SC={},SCN={},SCO=[];
+function setScore(k,e,m,name){if(!(k in SC))SCO.push(k);SC[k]={e,m};if(name)SCN[k]=name;renderScore();}
+function renderScore(){let E=0,M=0;SCO.forEach(k=>{E+=SC[k].e;M+=SC[k].m;});const sn=$('#scoreNow');if(!sn)return;sn.textContent=E;$('#scoreMax').textContent=M;$('#progressFill').style.width=(M?E/M*100:0)+'%';
+  const kop=$('#kop');if(kop){const ord=(window.SCORDER||SCO).filter(k=>SC[k]);kop.innerHTML=ord.map(k=>`<tr><td>${SCN[k]||k}</td><td class="c">${SC[k].m}</td><td class="c">${SC[k].e}</td></tr>`).join('')+`<tr class="tot"><td>Итого</td><td class="c">${M}</td><td class="c">${E}</td></tr>`;}
+  const rk=$('#rank');if(rk){const p=M?E/M:0;rk.textContent=E===0?'Баллы появятся, когда начнёте отвечать.':p>=.85?'⭐⭐⭐ Отличный урок!':p>=.6?'⭐⭐ Хорошо! Чуть-чуть до максимума':'⭐ Хорошее начало — разберите ошибки';}}
+/* универсальная проверка .task */
+function evalTask(t,mark){let e=0,m=0;const res=(el,ok)=>{m++;if(ok)e++;if(mark)flag(el,ok);};
+  $$('.choice-group',t).forEach(g=>{if(g.closest('.nochk'))return;const s=$('.opt.sel',g);res(s||g,!!(s&&s.dataset.ok));});
+  $$('select[data-a]',t).forEach(s=>res(s,s.value===s.dataset.a));
+  $$('input.ans[data-a]',t).forEach(i=>res(i,sameAns(i.value,i.dataset.a)));
+  return {e,m};}
+const PRAISE=['Верно!','Отлично!','Супер!','Всё правильно!','Так держать!'];
+function initTasks(){$$('.task').forEach(t=>{const r0=evalTask(t,false);setScore(t.dataset.task,0,r0.m,t.dataset.name);
+  $$('.choice-group',t).forEach(g=>g.addEventListener('click',ev=>{const o=ev.target.closest('.opt');if(!o)return;$$('.opt',g).forEach(x=>x.classList.toggle('sel',x===o));g.classList.remove('ok','bad');$$('.opt',g).forEach(x=>x.classList.remove('ok','bad'));}));
+  $$('input,select',t).forEach(x=>x.addEventListener('input',()=>x.classList.remove('ok','bad')));
+  $$('input.ans',t).forEach((x,i,a)=>x.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();(a[i+1]||$('.chk',t)).focus();}}));
+  const btn=$('.chk',t),fb=$('.fb',t);if(!btn)return;
+  btn.addEventListener('click',()=>{const r=evalTask(t,true);setScore(t.dataset.task,r.e,r.m);t.classList.add('show');
+    if(r.e===r.m){fb.className='fb good';fb.textContent=PRAISE[Math.floor(Math.random()*PRAISE.length)]+' '+r.e+' из '+r.m;burst(btn);}
+    else{fb.className='fb meh';fb.textContent='Верно '+r.e+' из '+r.m+'. Исправьте отмеченное красным!';}});});}
+/* таймер урока */
+function initTimer(total,stg){let left=total*60,tick=null;const T=total*60;
+  const draw=()=>{$('#tTime').textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');const el=(T-left)/60,run=left<T&&left>0;let nm='урок · '+total+' мин';
+    $$('#navLinks a').forEach(a=>a.classList.remove('now'));stg.forEach(s=>{if(run&&el>=s[1]&&el<s[2]){const a=$('#navLinks a[href="#'+s[0]+'"]');if(a){a.classList.add('now');nm='сейчас: '+a.textContent.replace(/^[^А-Яа-яA-Za-z0-9]+/,'');}}});$('#tLabel').textContent=left===0?'время!':nm;};
+  $('#tStart').addEventListener('click',function(){if(tick){clearInterval(tick);tick=null;this.textContent='▶';return;}if(left<=0)left=T;this.textContent='❚❚';tick=setInterval(()=>{left--;if(left<=0){left=0;clearInterval(tick);tick=null;$('#tStart').textContent='▶';}draw();},1000);});
+  $('#tReset').addEventListener('click',()=>{clearInterval(tick);tick=null;left=T;$('#tStart').textContent='▶';draw();});draw();}
+/* мини-таймер для игр */
+function countdown(el,sec,onEnd){let l=sec;el.textContent=fmt(l);const id=setInterval(()=>{l--;el.textContent=fmt(l);if(l<=0){clearInterval(id);el.textContent='⏰ время!';onEnd&&onEnd();}},1000);return ()=>clearInterval(id);function fmt(x){return '⏱ '+Math.floor(x/60)+':'+String(x%60).padStart(2,'0');}}
+/* доска */
+function initBoard(){if(!$('#board'))return;const boards={};let bKey='free',tool='pen',color='#1b2b3a',width=4,cur=null;
+  const area=$('#bArea'),cvB=$('#cvBg'),cvT=$('#cvTop'),ctxT=cvT.getContext('2d');
+  const bd=()=>boards[bKey]||(boards[bKey]={strokes:[]});
+  function size(){const r=area.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cvT.width=Math.round(r.width*dpr);cvT.height=Math.round(r.height*dpr);ctxT.setTransform(dpr,0,0,dpr,0,0);drawAll();}
+  function ds(s){const c=ctxT;c.save();c.globalCompositeOperation=s.t==='eraser'?'destination-out':'source-over';c.strokeStyle=s.c;c.lineWidth=s.t==='eraser'?s.w*5:s.w;c.lineCap='round';c.lineJoin='round';c.beginPath();s.p.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));if(s.p.length===1)c.lineTo(s.p[0][0]+.1,s.p[0][1]);c.stroke();c.restore();}
+  function drawAll(){const r=area.getBoundingClientRect();ctxT.clearRect(0,0,r.width,r.height);bd().strokes.forEach(ds);if(cur)ds(cur);}
+  const pos=e=>{const r=cvT.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];};
+  cvT.addEventListener('pointerdown',e=>{cvT.setPointerCapture(e.pointerId);cur={t:tool,c:color,w:width,p:[pos(e)]};drawAll();});
+  cvT.addEventListener('pointermove',e=>{if(!cur)return;const p=pos(e);if(cur.t==='line')cur.p=[cur.p[0],p];else cur.p.push(p);drawAll();});
+  const end=()=>{if(!cur)return;bd().strokes.push(cur);cur=null;drawAll();};cvT.addEventListener('pointerup',end);cvT.addEventListener('pointercancel',end);
+  $$('.b-bar [data-tool]').forEach(b=>b.addEventListener('click',()=>{tool=b.dataset.tool;$$('.b-bar [data-tool]').forEach(x=>x.classList.toggle('sel',x===b));}));
+  $$('.b-bar .sw').forEach(b=>b.addEventListener('click',()=>{color=b.dataset.c;$$('.b-bar .sw').forEach(x=>x.classList.toggle('sel',x===b));if(tool==='eraser'){tool='pen';$$('.b-bar [data-tool]').forEach(x=>x.classList.toggle('sel',x.dataset.tool==='pen'));}}));
+  $$('.b-bar [data-w]').forEach(b=>b.addEventListener('click',()=>{width=+b.dataset.w;$$('.b-bar [data-w]').forEach(x=>x.classList.toggle('sel',x===b));}));
+  $('#bUndo').addEventListener('click',()=>{bd().strokes.pop();drawAll();});$('#bClear').addEventListener('click',()=>{bd().strokes=[];drawAll();});
+  window.openBoard=(key,title)=>{bKey=key;$('#bTitle').textContent=title||'Черновик';$('#board').classList.add('on');document.body.style.overflow='hidden';requestAnimationFrame(size);};
+  const close=()=>{$('#board').classList.remove('on');document.body.style.overflow='';};
+  $('#fab').addEventListener('click',()=>openBoard('free','Черновик'));$('#bClose').addEventListener('click',close);
+  document.addEventListener('keydown',e=>{if(!$('#board').classList.contains('on'))return;if(e.key==='Escape')close();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();bd().strokes.pop();drawAll();}});
+  window.addEventListener('resize',()=>{if($('#board').classList.contains('on'))size();});}
+
+window.BURST=['📐','⭐','🏠','✨','🔨'];
+window.SCORDER=['s1','s2','s3','s4','s5'];
+const RN=['Прихожая','Кухня','Гостиная','Детская','Кабинет'];
+const RI=['🚪','🍳','🛋️','🧸','🔐'];
+const RT=['Детектив четырёхугольников','Плитка и линолеум','Паркет и ковёр','Флажки и гирлянды','Сейф прораба'];
+const fmt=x=>{const w=Math.floor(x),h=x-w>0.01;return (w||!h?w:'')+(h?'½':'');};
+const T=(x,y,t,c)=>`<text x="${x}" y="${y}"${c?` class="${c}"`:''} text-anchor="middle">${t}</text>`;
+const SV=(vb,inner,lab)=>`<svg viewBox="${vb}" role="img" aria-label="${lab}">${inner}</svg>`;
+const RA=(x,y,dx,dy)=>`<path class="ln" d="M${x+dx} ${y} L${x+dx} ${y+dy} L${x} ${y+dy}"/>`;
+/* шпаргалка */
+const F={sq:['Квадрат','S = a²'],re:['Прямоугольник','S = a · b'],pa:['Параллелограмм','S = a · h<sub>a</sub>'],rh:['Ромб','S = a · h = ½ · d₁ · d₂'],tr:['Треугольник','S = ½ · a · h<sub>a</sub>'],rt:['Прямоугольный треугольник','S = ½ · a · b (катеты)'],
+ pr:['Свойства площади','равные фигуры — равные площади; S фигуры = сумма S её частей'],un:['Единицы','1 м² = 100 дм² = 10 000 см²'],k30:['Угол 30°','катет против угла 30° = ½ гипотенузы'],
+ q1:['Параллелограмм','противоположные стороны параллельны и равны; диагонали делятся пополам'],q2:['Прямоугольник','параллелограмм с прямыми углами; диагонали равны'],q3:['Ромб','параллелограмм с равными сторонами; диагонали ⊥ и делят углы пополам'],q4:['Квадрат','и прямоугольник, и ромб'],q5:['Трапеция','две стороны параллельны, две другие — нет']};
+const fsHTML=keys=>`<div class="fs">${keys.map(k=>`<div><b>${F[k][0]}</b><span class="${/[=·]/.test(F[k][1])&&F[k][1].length<34?'f':''}">${F[k][1]}</span></div>`).join('')}</div>`;
+$('#cheatAll').outerHTML=fsHTML(['sq','re','pa','rh','tr','rt','pr','k30']);
+/* фигуры */
+const G={
+ kit:SV('0 0 260 180',`<rect class="fg" x="40" y="20" width="180" height="120"/>${T(130,166,'4,5 м')}${T(22,86,'3 м')}`,'Прямоугольник 3 на 4,5 метра'),
+ L:SV('0 0 280 210',`<path class="fg" d="M30 20 H160 V72 H238 V176 H30 Z"/>${T(95,14,'5 м')}${T(180,52,'2 м','v')}${T(199,90,'3 м','v')}${T(258,130,'4 м')}${T(134,200,'8 м')}${T(14,104,'6 м')}`,'Кухня-студия Г-образной формы'),
+ pa1:SV('0 0 330 180',`<path class="fg" d="M40 150 L250 150 L300 40 L90 40 Z"/><path class="dsh" d="M90 40 V150"/>${RA(90,150,10,-10)}${T(160,174,'12 см')}${T(112,104,'5 см')}`,'Параллелограмм с основанием 12 и высотой 5'),
+ pa2:SV('0 0 390 170',`<path class="fg" d="M30 140 L250 140 L364 74 L144 74 Z"/><path class="dsh" d="M144 74 V140"/>${RA(144,140,10,-10)}${T(140,162,'10')}${T(70,98,'6')}${T(164,114,'3')}`,'Параллелограмм со сторонами 10 и 6 и высотой 3'),
+ rh1:SV('0 0 320 200',`<path class="fg2" d="M60 100 L160 25 L260 100 L160 175 Z"/><path class="dsh" d="M60 100 H260 M160 25 V175"/>${T(215,92,'4 м')}${T(180,146,'3 м')}`,'Ромб с диагоналями 3 и 4 метра'),
+ rh2:SV('0 0 380 160',`<path class="fg2" d="M20 130 L200 130 L356 40 L176 40 Z"/><path class="ln" d="M52 130 A32 32 0 0 0 47.7 114"/>${T(110,152,'10')}${T(72,124,'30°','v')}`,'Ромб со стороной 10 и углом 30 градусов'),
+ tr1:SV('0 0 320 180',`<path class="fg2" d="M20 150 L300 150 L110 30 Z"/><path class="dsh" d="M110 30 V150"/>${RA(110,150,10,-10)}${T(200,172,'14')}${T(124,100,'6')}`,'Треугольник с основанием 14 и высотой 6'),
+ tr2:SV('0 0 240 190',`<path class="fg2" d="M40 160 L40 20 L200 160 Z"/>${RA(40,160,12,-12)}${T(24,94,'7')}${T(120,182,'8')}`,'Прямоугольный треугольник с катетами 7 и 8'),
+ grid:(()=>{let g='';for(let i=0;i<=10;i++)g+=`<line class="gr" x1="${10+28*i}" y1="10" x2="${10+28*i}" y2="206"/>`;for(let j=0;j<=7;j++)g+=`<line class="gr" x1="10" y1="${10+28*j}" x2="290" y2="${10+28*j}"/>`;
+   return SV('0 0 300 216',g+`<path class="fg" d="M38 178 L150 178 L234 38 Z"/>`,'Тупоугольный треугольник на клетчатой бумаге');})(),
+ tr3:SV('0 0 340 190',`<path class="fg2" d="M20 170 L320 170 L128 26 Z"/><path class="dsh" d="M128 26 V170"/>${RA(128,170,10,-10)}${T(62,94,'15')}${T(236,94,'20')}${T(170,186,'25')}${T(140,110,'?')}`,'Прямоугольный треугольник с катетами 15 и 20, высота к гипотенузе')};
+/* задания: st, q, ответ (или set), подсказка, решение, фигура */
+const P=['Трапеция','Параллелограмм','Ромб','Прямоугольник','Квадрат'];
+const ST=[
+ {cheat:['q5','q1','q2','q3','q4'],min:7,lead:'Отметьте все фигуры, у которых свойство выполняется <b>всегда</b>. Каждое свойство — 1 балл.',
+  t:[{q:'Есть хотя бы одна пара параллельных сторон',set:[0,1,2,3,4],h:'Трапеция — четырёхугольник, у которого две стороны параллельны. А у параллелограмма таких пар сколько?',s:'У трапеции одна пара параллельных сторон, у параллелограмма, ромба, прямоугольника и квадрата — две. Подходят все 5.'},
+     {q:'Диагонали точкой пересечения делятся пополам',set:[1,2,3,4],h:'Это свойство параллелограмма. Какие из фигур — параллелограммы?',s:'Это свойство параллелограмма, а ромб, прямоугольник и квадрат — тоже параллелограммы. У трапеции — нет.'},
+     {q:'Диагонали равны',set:[3,4],h:'Вспомните особое свойство прямоугольника.',s:'Диагонали равны у прямоугольника, а квадрат — это прямоугольник. У ромба и параллелограмма — не всегда; у трапеции — только у равнобедренной.'},
+     {q:'Диагонали перпендикулярны',set:[2,4],h:'Вспомните особое свойство ромба. Квадрат — это ромб?',s:'Диагонали перпендикулярны у ромба, а квадрат — это ромб с прямыми углами. У прямоугольника — нет.'}]},
+ {cheat:['sq','re','pr','un'],min:10,lead:'Квадрат, прямоугольник и свойства площади.',
+  t:[{q:'Пол кухни — прямоугольник 3 м × 4,5 м. Сколько квадратных метров линолеума нужно?',a:'13,5',f:'kit',h:'Площадь прямоугольника S = a · b.',s:'S = 3 · 4,5 = 13,5 м².'},
+     {q:'Пол этой же кухни (3 м × 4,5 м) выкладывают квадратной плиткой 50 см × 50 см. Сколько плиток нужно?',a:'54',h:'50 см = 0,5 м. Сколько плиток уложится вдоль каждой стены?',s:'Вдоль стены 3 м: 3 : 0,5 = 6 плиток, вдоль стены 4,5 м: 4,5 : 0,5 = 9 плиток. Всего 6 · 9 = 54. Или: площадь плитки 0,25 м², 13,5 : 0,25 = 54.'},
+     {q:'Квадратную столешницу обклеили кромкой ровно по периметру — ушло 20 дм. Найдите площадь столешницы (дм²).',a:'25',h:'Периметр квадрата P = 4a.',s:'a = 20 : 4 = 5 дм, S = 5² = 25 дм².'},
+     {q:'Кухня-студия имеет форму, как на плане. Найдите её площадь (м²).',a:'42',f:'L',h:'Достройте фигуру до прямоугольника 8 × 6 или разрежьте её на два прямоугольника.',s:'Большой прямоугольник 8 · 6 = 48, вырезанный угол 3 · 2 = 6. S = 48 − 6 = 42 м². (Или 5 · 2 + 8 · 4 = 10 + 32 = 42.)'}]},
+ {cheat:['pa','rh','k30'],min:10,lead:'Площадь параллелограмма и ромба.',
+  t:[{q:'Паркетная доска — параллелограмм. Найдите её площадь (см²).',a:'60',f:'pa1',h:'S = a · h, где h — высота, проведённая к стороне a.',s:'S = 12 · 5 = 60 см².'},
+     {q:'Стороны параллелограмма 10 и 6, высота к большей стороне равна 3. Найдите высоту, проведённую к меньшей стороне.',a:'5',f:'pa2',h:'Сначала найдите площадь. Она одна и та же, к какой стороне ни считай.',s:'S = 10 · 3 = 30. Тогда 6 · h = 30, h = 5.'},
+     {q:'Ковёр в форме ромба, его диагонали 3 м и 4 м. Найдите площадь ковра (м²).',a:'6',f:'rh1',h:'Площадь ромба через диагонали: S = ½ · d₁ · d₂.',s:'S = ½ · 3 · 4 = 6 м².'},
+     {q:'Сторона ромба 10, острый угол 30°. Найдите площадь ромба.',a:'50',f:'rh2',h:'Опустите высоту из вершины тупого угла. Катет против угла 30° равен половине гипотенузы.',s:'Высота — катет против угла 30°: h = 10 : 2 = 5. S = a · h = 10 · 5 = 50.'}]},
+ {cheat:['tr','rt'],min:10,lead:'Площадь треугольника, в том числе прямоугольного.',
+  t:[{q:'Флажок для гирлянды — треугольник. Найдите его площадь.',a:'42',f:'tr1',h:'S = ½ · a · h.',s:'S = ½ · 14 · 6 = 42.'},
+     {q:'Прямоугольный треугольник с катетами 7 и 8. Найдите его площадь.',a:'28',f:'tr2',h:'В прямоугольном треугольнике один катет — это высота, проведённая к другому катету.',s:'S = ½ · 7 · 8 = 28.'},
+     {q:'Найдите площадь треугольника на клетчатой бумаге (клетка 1 × 1 см), в см².',a:'10',f:'grid',h:'Основание — нижняя сторона. Высота падает на продолжение основания — посчитайте клетки по вертикали.',s:'Основание 4 клетки, высота 5 клеток (она вне треугольника — так бывает у тупоугольного). S = ½ · 4 · 5 = 10 см².'},
+     {q:'Катеты прямоугольного треугольника 15 и 20, гипотенуза 25. Найдите высоту, проведённую к гипотенузе.',a:'12',f:'tr3',h:'Посчитайте площадь двумя способами: через катеты и через гипотенузу.',s:'S = ½ · 15 · 20 = 150. С другой стороны, S = ½ · 25 · h, значит 25 · h = 300, h = 12.'}]},
+ {cheat:['sq','re','rh','tr','pr','k30'],min:10,lead:'Каждый ответ — одна цифра кода. Решите все четыре задания, чтобы открыть сейф.',safe:1,
+  t:[{q:'Сторону квадрата увеличили в 3 раза. Во сколько раз увеличилась его площадь?',a:'9',h:'Возьмите квадрат со стороной 1 и со стороной 3.',s:'S = a², а (3a)² = 9a² — площадь увеличилась в 9 раз.'},
+     {q:'Площадь прямоугольника 64, одна сторона в 4 раза больше другой. Найдите меньшую сторону.',a:'4',h:'Пусть меньшая сторона x, тогда большая 4x.',s:'x · 4x = 64, x² = 16, x = 4.'},
+     {q:'Медиана делит треугольник на два треугольника. Площадь одного из них 7. Найдите площадь всего треугольника.',a:'14',h:'У двух получившихся треугольников равные основания и общая высота.',s:'Медиана делит сторону пополам — основания равны, высота общая, значит площади равны: 7 + 7 = 14.'},
+     {q:'Квадрат и ромб имеют одинаковую сторону 6, острый угол ромба 30°. Во сколько раз площадь квадрата больше площади ромба?',a:'2',h:'Высота ромба — катет против угла 30°.',s:'Квадрат: 6² = 36. Ромб: h = 6 : 2 = 3, S = 6 · 3 = 18. 36 : 18 = 2.'}]}];
+/* разметка станций */
+$('#stations').innerHTML=ST.map((st,i)=>`<section id="s${i+1}"${i%2?'':' class="alt"'}><div class="wrap">
+ <p class="kicker">Комната ${i+1} из 5 · ${RN[i]}</p><h2 class="sec-title">${RI[i]} ${RT[i]}</h2>
+ <div class="st-head"><span class="st-pts">Баллы: <span id="sp${i}">0</span> / 4</span><button class="btn alt2 sm" type="button" data-go="${i}">⏱ ${st.min} минут</button><span class="chip-st" id="stT${i}">${st.min}:00</span></div>
+ <p class="lead" style="margin:-4px 0 12px">${st.lead}</p>
+ <details class="cheat"><summary>📐 Шпаргалка к этой комнате</summary>${fsHTML(st.cheat)}</details>
+ ${st.safe?`<div class="safe" id="safe"><div class="ic" id="safeIc">🔒</div><div class="dials">${st.t.map((_,j)=>`<div class="dial" id="dl${j}">?</div>`).join('')}</div><div class="sfb" id="safeFb">Код: 4 ответа по порядку</div></div>`:''}
+ <div class="tasks">${st.t.map((t,j)=>`<div class="tk" id="tk${i}_${j}"><div class="trow"><span class="no">${st.safe?'Цифра кода':'Задание'} ${j+1}</span><span class="pt">— / 1</span></div>
+   <div class="q">${t.q}</div>${t.f?G[t.f]:''}
+   ${t.set?`<div class="trow">${P.map((p,k)=>`<button type="button" class="opt" data-k="${k}">${p}</button>`).join('')}</div>`:`<div class="trow"><input class="ans" inputmode="decimal" autocomplete="off" aria-label="Ответ"></div>`}
+   <div class="trow"><button class="btn sm" type="button" data-chk>Ответить</button><button class="btn ghost sm" type="button" data-hint>💡 Подсказка (−½)</button></div>
+   <span class="msg"></span><div class="hint">💡 ${t.h}</div><div class="sol">✅ ${t.s}</div></div>`).join('')}</div>
+</div></section>`).join('');
+/* план квартиры */
+const R=[[152,152,110,90],[2,2,150,110],[152,2,250,150],[2,112,150,130],[262,152,140,90]];
+$('#planSvg').innerHTML=R.map((r,i)=>`<g class="room" data-i="${i}" tabindex="0" role="link" aria-label="${RN[i]}"><rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}"/>${T(r[0]+r[2]/2,r[1]+r[3]/2-14,RI[i],'ri')}${T(r[0]+r[2]/2,r[1]+r[3]/2+10,(i+1)+'. '+RN[i],'rn')}${T(r[0]+r[2]/2,r[1]+r[3]/2+28,'0 / 4','rs')}</g>`).join('')
+ +'<path class="door" d="M190 152 H222 M152 175 V205 M262 180 V210 M60 112 H100 M152 60 V90"/>';
+$$('#planSvg .room').forEach(g=>{const go=()=>$('#s'+(+g.dataset.i+1)).scrollIntoView({behavior:'smooth'});g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter')go();});});
+/* движок */
+const S=ST.map(st=>st.t.map(()=>({tries:0,hint:false,done:false,pts:0})));
+const RK=[[18,'🏆 Главный архитектор'],[14,'👷 Прораб'],[10,'🔨 Мастер'],[0,'🧰 Стажёр']];
+const rankOf=x=>RK.find(r=>x>=r[0])[1];
+ST.forEach((st,i)=>setScore('s'+(i+1),0,4,(i+1)+'. '+RN[i]));
+function upd(i){const sum=S[i].reduce((a,b)=>a+b.pts,0),all=S[i].every(x=>x.done);setScore('s'+(i+1),sum,4);$('#sp'+i).textContent=fmt(sum);
+ const g=$(`#planSvg .room[data-i="${i}"]`);$('.rs',g).textContent=fmt(sum)+' / 4';g.classList.toggle('done',all);
+ const tot=S.flat().reduce((a,b)=>a+b.pts,0),any=S.flat().some(x=>x.done);
+ $$('#ranks div').forEach(d=>d.classList.remove('on'));if(any){$$('#ranks div').find(d=>tot>=+d.dataset.min).classList.add('on');}
+ const txt=any?`${fmt(tot)} / 20 · ${rankOf(tot)}`:'';$('#myRank').textContent=txt;$('#finRank').textContent=any?'Мой результат: '+txt:'Сначала пройдите комнаты 🙂';
+ if(ST[i].safe)safe();}
+function safe(){const s=S[4];s.forEach((x,j)=>{const d=$('#dl'+j);if(x.done){d.textContent=ST[4].t[j].a;d.className='dial '+(x.pts>0?'ok':'bad');}});
+ if(s.every(x=>x.done)){const ok=s.every(x=>x.pts>0);$('#safe').classList.add('open');$('#safeIc').textContent=ok?'💰':'🔓';$('#safeFb').textContent=ok?'Сейф открыт! Код '+ST[4].t.map(t=>t.a).join('-')+' — вы настоящий архитектор!':'Прораб открыл сейф своим ключом. Код: '+ST[4].t.map(t=>t.a).join('-');if(ok)burst($('#safe'));}}
+ST.forEach((st,i)=>st.t.forEach((t,j)=>{const el=$(`#tk${i}_${j}`),s=S[i][j],msg=$('.msg',el),inp=$('input',el),ptEl=$('.pt',el);
+ if(t.set)$$('.opt',el).forEach(b=>b.addEventListener('click',()=>{if(!s.done)b.classList.toggle('sel');}));
+ const finish=(ok)=>{s.done=true;s.pts=ok?((s.tries===1&&!s.hint)?1:0.5):0;el.classList.add('fin',ok?'win':'lose');ptEl.textContent=fmt(s.pts)+' / 1';
+   $$('button,input',el).forEach(x=>x.disabled=true);
+   if(t.set)$$('.opt',el).forEach(b=>{const k=+b.dataset.k,need=t.set.includes(k);b.classList.toggle('sel',need);b.style.outline=need!==b.dataset.was?'':'';});
+   msg.textContent=ok?(s.pts===1?'Верно! +1 балл':'Верно! +½ балла'):'Ответ: '+(t.set?t.set.map(k=>P[k]).join(', '):t.a);msg.style.color=ok?'var(--good)':'var(--bad)';if(ok)burst(el);upd(i);};
+ $('[data-chk]',el).addEventListener('click',()=>{if(s.done)return;let ok;
+   if(t.set){const sel=$$('.opt.sel',el).map(b=>+b.dataset.k);if(!sel.length){msg.textContent='Отметьте хотя бы одну фигуру.';msg.style.color='var(--muted)';return;}ok=sel.length===t.set.length&&t.set.every(k=>sel.includes(k));}
+   else{if(!inp.value.trim()){msg.textContent='Впишите ответ.';msg.style.color='var(--muted)';return;}ok=sameAns(inp.value,t.a);flag(inp,ok);}
+   s.tries++;if(ok||s.tries>=2)finish(ok);else{msg.textContent='Неверно. Ещё одна попытка — за ½ балла.';msg.style.color='var(--bad)';}});
+ if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')$('[data-chk]',el).click();});
+ $('[data-hint]',el).addEventListener('click',function(){if(s.done||s.hint)return;s.hint=true;el.classList.add('h');this.disabled=true;});}));
+$$('[data-go]').forEach(b=>b.addEventListener('click',function(){this.disabled=true;const i=+this.dataset.go;countdown($('#stT'+i),ST[i].min*60,()=>{});}));
+/* таблица учителя */
+{const tb=$('#gsc tbody');tb.innerHTML=Array.from({length:5},()=>`<tr><td class="nm"><input aria-label="Ученик" placeholder="ученик"></td>${[1,2,3,4,5].map(()=>`<td><input inputmode="decimal" aria-label="Баллы"></td>`).join('')}<td class="tot">0</td><td class="rk">—</td></tr>`).join('');
+ tb.addEventListener('input',e=>{const tr=e.target.closest('tr');let s=0,any=false;$$('td:not(.nm) input',tr).forEach(i=>{const v=parseFloat(i.value.replace(',','.'));if(!isNaN(v)){any=true;s+=Math.max(0,Math.min(4,v));}});$('.tot',tr).textContent=fmt(s);$('.rk',tr).textContent=any?rankOf(s):'—';});}
+$$('#hard .opt').forEach(o=>o.addEventListener('click',()=>o.classList.toggle('sel')));
+initTimer(60,[['start',0,4],['s1',4,11],['s2',11,21],['s3',21,31],['s4',31,41],['s5',41,51],['finish',51,60]]);
+
+initTasks();initBoard();renderScore();
+})();
+</script>
+</body>
+</html>

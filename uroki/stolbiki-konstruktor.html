@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Конструктор столбиков</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3faf9;--surface:#fff;--surface-2:#eef7f6;--ink:#12324a;--ink-2:#41596d;--muted:#7b8f9e;--line:#d6e8e6;--acc:#1f9e8a;--acc-dk:#147868;--acc2:#2f7fd0;--soft:#dff3ee;--good:#1c9a5f;--bad:#d9434c;--warn:#f08a24;--hl:#ffe9a8;--grid:#cfe3f5;--pen:#1d3f8f;--shadow:0 10px 30px rgba(18,50,74,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1d27;--surface:#142a36;--surface-2:#1a3442;--ink:#e8f4f6;--ink-2:#b9cdd6;--muted:#86a0ad;--line:#28485a;--acc:#2fb8a1;--acc-dk:#6fdcc8;--acc2:#4f9ae6;--soft:#1b3b3e;--good:#45d18e;--bad:#ff6b72;--warn:#ffa44d;--hl:#5c4a1a;--grid:#23465a;--pen:#9cc2ff;--shadow:0 10px 30px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0d1d27;--surface:#142a36;--surface-2:#1a3442;--ink:#e8f4f6;--ink-2:#b9cdd6;--muted:#86a0ad;--line:#28485a;--acc:#2fb8a1;--acc-dk:#6fdcc8;--acc2:#4f9ae6;--soft:#1b3b3e;--good:#45d18e;--bad:#ff6b72;--warn:#ffa44d;--hl:#5c4a1a;--grid:#23465a;--pen:#9cc2ff;--shadow:0 10px 30px rgba(0,0,0,.35)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.45}
+button,input{font:inherit;color:inherit}
+.top{background:linear-gradient(110deg,#c9f0e6,#a9dcf5);color:#12324a}
+.top .in{max-width:980px;margin:0 auto;padding:18px 16px}
+.top small{font-weight:900;letter-spacing:.08em;font-size:13px}
+.top h1{font-size:clamp(24px,4.5vw,34px);line-height:1.15;margin-top:2px}
+.wrap{max-width:980px;margin:0 auto;padding:18px 16px 48px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+.form{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.num{width:min(210px,40vw);font-size:24px;font-weight:900;border:2px solid var(--line);border-radius:14px;padding:8px 12px;background:var(--surface);text-align:center;letter-spacing:.06em}
+.num:focus{outline:none;border-color:var(--acc)}
+.ops{display:flex;gap:6px}
+.op{width:50px;height:50px;border-radius:14px;border:2px solid var(--line);background:var(--surface);font-size:26px;font-weight:900;cursor:pointer}
+.op.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn{border:none;background:var(--acc);color:#fff;border-radius:999px;padding:11px 20px;font-weight:900;font-size:16px;cursor:pointer}
+.btn.alt{background:var(--acc2)}
+.btn.gh{background:var(--surface);color:var(--acc-dk);border:2px solid var(--line)}
+.btn:disabled{opacity:.35;cursor:default}
+.err{color:var(--bad);font-weight:800;margin-top:8px;min-height:1.2em}
+.hint{color:var(--muted);font-size:14.5px;margin-top:4px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:760px){.stage{grid-template-columns:1fr}}
+.paper{position:relative;border-radius:16px;background-color:var(--surface);overflow:hidden;padding:14px;min-height:200px;display:flex;justify-content:center}
+.grid{position:relative;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:var(--s) var(--s);background-position:-1px -1px;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid)}
+.c{position:absolute;width:var(--s);height:var(--s);display:flex;align-items:center;justify-content:center;font-family:Caveat,"Comic Sans MS",cursive;font-weight:700;font-size:calc(var(--s)*.86);color:var(--pen);line-height:1;border-radius:6px;transition:background .3s}
+.c.small{font-size:calc(var(--s)*.5);align-items:flex-end;padding-bottom:2px;color:var(--warn)}
+.c.res{color:var(--acc-dk)}
+.c.dim{color:var(--muted)}
+.c.sign{transform:translateY(-50%);color:var(--ink-2)}
+.c.strike::after{content:"";position:absolute;left:18%;right:18%;top:50%;border-top:2px solid var(--warn);transform:rotate(-20deg)}
+.c.hl{background:var(--hl)}
+.c.new{animation:pop .45s}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.c.sign.new{animation:none}
+.hl-line{position:absolute;height:2.5px;background:var(--pen);border-radius:2px}
+.vl-line{position:absolute;width:2.5px;background:var(--pen);border-radius:2px}
+.explain .cnt{font-size:13px;font-weight:900;letter-spacing:.06em;color:var(--acc-dk);text-transform:uppercase}
+.explain .txt{font-size:clamp(18px,2.2vw,21px);font-weight:700;margin:8px 0 12px;min-height:5.5em}
+.explain .txt b{color:var(--acc-dk)}
+.explain .txt .y{background:var(--hl);border-radius:6px;padding:0 4px}
+.bar{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.nav{display:flex;flex-wrap:wrap;gap:8px}
+.ans{margin-top:12px;font-weight:900;font-size:20px;color:var(--good);min-height:1.4em}
+.algo{margin-top:6px;font-size:15px;color:var(--ink-2)}
+.modes{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.mode{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 18px;font-weight:900;font-size:16px;cursor:pointer}
+.mode.on{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.cin{position:absolute;width:var(--s);height:var(--s);border:2px solid var(--acc2);border-radius:7px;background:color-mix(in srgb,var(--acc2) 10%,var(--surface));text-align:center;font-family:Caveat,"Comic Sans MS",cursive;font-weight:700;font-size:calc(var(--s)*.8);color:var(--pen);padding:0;outline:none}
+.cin:focus{border-color:var(--warn);box-shadow:0 0 0 3px color-mix(in srgb,var(--warn) 35%,transparent)}
+.cin.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--surface));animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.fbk{font-weight:800;min-height:1.4em;margin:-4px 0 10px}
+.fbk.good{color:var(--good)}.fbk.bad{color:var(--bad)}
+.tip2{background:color-mix(in srgb,var(--warn) 14%,var(--surface));border-radius:12px;padding:10px 12px;font-size:16px;margin-bottom:10px;display:none}
+.stat{font-weight:900;color:var(--acc-dk);font-size:15px}
+.algo summary{font-weight:900;cursor:pointer;color:var(--ink)}
+.algo ol{margin:8px 0 0 20px}
+.algo li{margin:3px 0}
+.ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ex button{border:2px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 12px;font-weight:800;font-size:14.5px;cursor:pointer}
+</style>
+</head>
+<body>
+<header class="top"><div class="in"><small>МАТЕМАТИКА · ВЫЧИСЛЕНИЯ</small><h1>🧮 Конструктор столбиков</h1></div></header>
+<div class="wrap">
+  <div class="card">
+    <div class="form">
+      <input class="num" id="a" inputmode="numeric" autocomplete="off" aria-label="Первое число" value="4875">
+      <div class="ops" role="group" aria-label="Действие">
+        <button class="op on" data-op="+" type="button" aria-label="Сложение">+</button>
+        <button class="op" data-op="-" type="button" aria-label="Вычитание">−</button>
+        <button class="op" data-op="*" type="button" aria-label="Умножение">×</button>
+        <button class="op" data-op="/" type="button" aria-label="Деление">:</button>
+      </div>
+      <input class="num" id="b" inputmode="numeric" autocomplete="off" aria-label="Второе число" value="768">
+      <button class="btn" id="go" type="button">Построить столбик</button>
+      <button class="btn gh" id="rnd" type="button">🎲 Случайный пример</button>
+    </div>
+    <p class="err" id="err"></p>
+    <p class="hint" id="lim"></p>
+  </div>
+  <div class="modes" role="tablist"><button class="mode on" data-m="show" type="button" role="tab">👀 Смотреть решение</button><button class="mode" data-m="solve" type="button" role="tab">✍️ Реши сам</button><span class="stat" id="stat" style="align-self:center"></span></div>
+  <div class="stage">
+    <div class="card paper"><div class="grid" id="grid"></div></div>
+    <div class="card explain">
+      <div class="cnt" id="cnt">Шаг 1</div>
+      <div class="bar"><i id="prog"></i></div>
+      <div class="txt" id="txt"></div>
+      <div class="tip2" id="tip2"></div>
+      <div class="fbk" id="fbk"></div>
+      <div class="nav" id="navSolve" style="display:none">
+        <button class="btn" id="chk" type="button">Проверить</button>
+        <button class="btn" id="fwd" type="button">Дальше ▶</button>
+        <button class="btn gh" id="hint" type="button">💡 Подсказка</button>
+        <button class="btn gh" id="reveal" type="button">Показать шаг</button>
+        <button class="btn gh" id="restart" type="button">⟲ Заново</button>
+      </div>
+      <div class="nav" id="navShow">
+        <button class="btn gh" id="prev" type="button" aria-label="Предыдущий шаг">◀ Назад</button>
+        <button class="btn" id="next" type="button">Следующий шаг ▶</button>
+        <button class="btn alt" id="auto" type="button">▶ Авто</button>
+        <button class="btn gh" id="first" type="button">⟲ Сначала</button>
+        <button class="btn gh" id="last" type="button">Весь ответ</button>
+      </div>
+      <div class="ans" id="ans"></div>
+      <details class="algo" id="algo"></details>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+const LIM={'+':[10,10],'-':[10,10],'*':[6,5],'/':[9,5]};
+const OPN={'+':'+','-':'−','*':'×','/':':'};
+const PL=['единицы','десятки','сотни','тысячи','десятки тысяч','сотни тысяч','миллионы','десятки миллионов','сотни миллионов','миллиарды'];
+const PLG=['единиц','десятков','сотен','тысяч','десятков тысяч','сотен тысяч','миллионов','десятков миллионов','сотен миллионов','миллиардов'];
+const pl=p=>PL[p]||('разряд '+(p+1)),plg=p=>PLG[p]||('разряда '+(p+1));
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const ALGO={'+':['Записываем числа разряд под разрядом: единицы под единицами, десятки под десятками.','Складываем справа налево, начиная с единиц.','Если сумма 10 или больше — пишем последнюю цифру, а 1 переносим в следующий разряд.','Не забываем прибавлять перенесённую единицу.'],
+ '-':['Записываем большее число сверху, разряд под разрядом.','Вычитаем справа налево, начиная с единиц.','Если цифра сверху меньше — занимаем 1 у соседнего разряда слева (там станет на 1 меньше), а к нашей цифре добавляем 10.','Если слева 0 — занимаем дальше, а нули превращаются в 9.'],
+ '*':['Сверху пишем число, в котором больше цифр.','Умножаем верхнее число на каждую цифру нижнего, начиная с единиц.','Каждое следующее неполное произведение сдвигаем на один разряд влево.','Цифра 0 в нижнем числе — строку пропускаем, следующее произведение сдвигаем ещё левее.','Складываем неполные произведения.'],
+ '/':['Находим первое неполное делимое — число не меньше делителя.','Определяем, сколько цифр будет в частном (ставим точки).','Подбираем цифру частного: сколько раз делитель помещается в неполном делимом.','Умножаем, вычитаем, сносим следующую цифру — и повторяем.','Если неполное делимое меньше делителя — в частное пишем 0.','То, что осталось в конце, — остаток.']};
+let op="+",S=null,k=0,timer=null,mode='show',done=false,tries=0,good=0,need=0,revealed=0,vals={};
+/* ---------- построитель шагов ---------- */
+function Builder(){this.steps=[];this.rows=0;this.cols=0;}
+Builder.prototype.ask=function(t){this.steps[this.steps.length-1].ask=t;};
+Builder.prototype.step=function(text,set,hl,lines){set=set||[];this.steps.push({text,set,hl:hl||[],lines:lines||[]});set.forEach(x=>{this.rows=Math.max(this.rows,x[0]+1);this.cols=Math.max(this.cols,x[1]+1);});(lines||[]).forEach(l=>{if(l.h){this.rows=Math.max(this.rows,l.r+1);this.cols=Math.max(this.cols,l.c2+1);}else{this.rows=Math.max(this.rows,l.r2+1);}});};
+const dg=n=>String(n).split('').map(Number);
+const y=s=>`<span class="y">${s}</span>`;
+function numCells(r,cRight,str,cls){const a=[];const s=String(str);for(let i=0;i<s.length;i++)a.push([r,cRight-(s.length-1-i),s[i],cls||'']);return a;}
+
+function buildAdd(A,B){const b=new Builder(),a=dg(A).reverse(),c=dg(B).reverse(),m=Math.max(a.length,c.length),W=m+2,R=c=>W-1-c,sc=W-1-m;
+ b.step(`Записываем числа столбиком: <b>разряд под разрядом</b> — единицы под единицами, десятки под десятками. Знак «+» ставим слева.`,
+  [...numCells(1,W-1,A),...numCells(2,W-1,B),[2,sc,'+','sign']],[],[{h:1,r:2,c1:sc,c2:W-1}]);
+ let carry=0;
+ for(let p=0;p<m;p++){const x=a[p],z=c[p],hasX=x!==undefined,hasZ=z!==undefined,s=(x||0)+(z||0)+carry;const hl=[];if(hasX)hl.push([1,R(p)]);if(hasZ)hl.push([2,R(p)]);if(carry)hl.push([0,R(p)]);
+  let t=`<b>${cap(pl(p))}:</b> `;const parts=[];if(hasX)parts.push(x);if(hasZ)parts.push(z);
+  if(!hasX||!hasZ)t+=`у второго числа здесь цифры нет. `;
+  t+=parts.join(' + ')+(carry?` + ${y(carry)} (перенос)`:'')+` = <b>${s}</b>. `;
+  const set=[[3,R(p),String(s%10),'res']];
+  if(s>=10){t+=`Пишем <b>${s%10}</b>, а <b>1</b> переносим в ${plg(p+1)} — записываем маленькой сверху.`;set.push([0,R(p+1),'1','small']);}else t+=`Пишем <b>${s}</b>.`;
+  if(parts.length===1&&!carry)t=`<b>${cap(pl(p))}:</b> складывать не с чем — просто сносим цифру <b>${s}</b> вниз.`;
+  b.step(t,set,hl);b.ask(`<b>${cap(pl(p))}:</b> сложите цифры в подсвеченном разряде`+(carry?' и не забудьте <b>1</b>, перенесённую сверху':'')+'. Впишите цифру ответа.');carry=s>=10?1:0;}
+ if(carry)b.step(`Перенесённую <b>1</b> записываем в ответ — в разряд ${plg(m)}.`,[[3,R(m),'1','res']],[[0,R(m)]]);b.ask('Разряды закончились, а сверху осталась перенесённая единица. Что пишем в ответ?');
+ b.ans=`${A} + ${B} = ${A+B}`;return b;}
+
+function buildSub(A0,B0){const b=new Builder();let A=A0,B=B0,neg=false;if(A<B){A=B0;B=A0;neg=true;}
+ const a=dg(A).reverse(),c=dg(B).reverse(),m=a.length,W=m+2,R=p=>W-1-p,sc=W-1-m,res=A-B,rl=String(res).length;
+ b.step((neg?`${A0} меньше ${B0}, поэтому из большего вычитаем меньшее: считаем <b>${A} − ${B}</b>, а в ответе поставим минус. `:'')+`Записываем столбиком <b>разряд под разрядом</b>, большее число сверху.`,
+  [...numCells(1,W-1,A),...numCells(2,W-1,B),[2,sc,'−','sign']],[],[{h:1,r:2,c1:sc,c2:W-1}]);
+ const cur=a.slice(),chg=a.map(()=>false);
+ for(let p=0;p<m;p++){const z=c[p]||0,hasZ=c[p]!==undefined;let t=`<b>${cap(pl(p))}:</b> `,set=[],hl=[[1,R(p)]];if(hasZ)hl.push([2,R(p)]);if(chg[p])hl.push([0,R(p)]);
+  if(cur[p]<z){let j=p+1;while(cur[j]===0)j++;
+   t+=`из ${cur[p]} нельзя вычесть ${z}. Занимаем <b>1</b> у ${plg(j)}`+(j>p+1?` (в соседних разрядах нули — они превращаются в <b>9</b>)`:'')+`: там станет <b>${cur[j]-1}</b>, а у нас <b>${cur[p]+10}</b>. `;
+   cur[j]--;set.push([1,R(j),String(a[j]),'strike'],[0,R(j),String(cur[j]),'small']);chg[j]=true;hl.push([1,R(j)]);
+   for(let q=p+1;q<j;q++){cur[q]=9;chg[q]=true;set.push([1,R(q),String(a[q]),'strike'],[0,R(q),'9','small']);hl.push([1,R(q)]);}
+   cur[p]+=10;}
+  else if(chg[p])t+=`после заёма здесь <b>${cur[p]}</b>. `;
+  const d=cur[p]-z;
+  if(p>=rl){t+=`${cur[p]} − ${z} = 0 — ноль в начале числа не пишем.`;b.step(t,set,hl);continue;}
+  t+=hasZ?`${cur[p]} − ${z} = <b>${d}</b>.`:`вычитать нечего — сносим <b>${d}</b>.`;set.push([3,R(p),String(d),'res']);b.step(t,set,hl);b.ask(`<b>${cap(pl(p))}:</b> вычтите в подсвеченном разряде. Если цифра сверху меньше — займите 1 у соседа слева (у него станет на 1 меньше, а у вас +10).`);}
+ if(neg)b.step(`Не забываем: вычитали из меньшего большее, поэтому ставим <b>минус</b>.`,[[3,R(rl),'−','res']]);
+ b.ans=`${A0} − ${B0} = ${String(A0-B0).replace('-','−')}`;return b;}
+
+function buildMul(A0,B0){const b=new Builder();let A=A0,B=B0,sw=false;if(String(B).length>String(A).length){A=B0;B=A0;sw=true;}
+ const a=dg(A).reverse(),c=dg(B).reverse(),la=a.length,lb=c.length,W=la+lb+1,R=p=>W-1-p,sc=W-1-la;
+ b.step((sw?`Удобнее сверху записать число, в котором больше цифр: ${A} × ${B}. `:'')+`Записываем множители столбиком: последнюю цифру нижнего числа — <b>под последней цифрой</b> верхнего.`,
+  [...numCells(1,W-1,A),...numCells(2,W-1,B),[2,R(Math.max(la,lb)),'×','sign']],[],[{h:1,r:2,c1:Math.min(sc,R(lb)),c2:W-1}]);
+ if(A===0||B===0){b.step(`Если один из множителей равен 0, произведение равно <b>0</b>.`,[[3,W-1,'0','res']]);b.ans=`${A0} × ${B0} = 0`;return b;}
+ let row=3;const rows=[];let carrySet=[];
+ for(let j=0;j<lb;j++){const q=c[j];
+  if(q===0){b.step(`Цифра ${plg(j)} нижнего числа — <b>0</b>. Умножать на 0 не нужно: эту строку пропускаем, следующее произведение сдвинем ещё на разряд левее.`,carrySet.map(x=>[x[0],x[1],'','']),[[2,R(j)]]);carrySet=[];continue;}
+  let carry=0;const rr={row,j,cells:{}};
+  for(let i=0;i<la;i++){const pr=a[i]*q,t=pr+carry,set=[],hl=[[1,R(i)],[2,R(j)]];
+   if(i===0){set.push(...carrySet.map(x=>[x[0],x[1],'','']));carrySet=[];}
+   if(carry)hl.push([0,R(i)]);
+   let tx=(i===0?(lb>1?`Умножаем ${A} на <b>${q}</b> (${pl(j)} нижнего числа). Первую цифру пишем <b>под ${q}</b>. `:`Умножаем ${A} на <b>${q}</b>, начиная с единиц. `):'')+`${a[i]} · ${q} = ${pr}`+(carry?` + ${y(carry)} в уме = <b>${t}</b>`:'')+'. ';
+   const last=i===la-1;
+   if(last){tx+=`Это последняя цифра — пишем <b>${t}</b> целиком.`;numCells(row,R(i+j),t,'res').forEach(x=>{set.push(x);rr.cells[x[1]]=+x[2];});}
+   else{tx+=`Пишем <b>${t%10}</b>`+(t>=10?`, а <b>${Math.floor(t/10)}</b> запоминаем — записываем маленькой над следующей цифрой.`:'.');set.push([row,R(i+j),String(t%10),'res']);rr.cells[R(i+j)]=t%10;
+    if(t>=10){set.push([0,R(i+1),String(Math.floor(t/10)),'small']);carrySet.push([0,R(i+1)]);}}
+   b.step(tx,set,hl);b.ask(`Умножьте <b>${a[i]}</b> на <b>${q}</b>`+(carry?` и прибавьте <b>${carry}</b> в уме`:'')+(last?'. Это последняя цифра — запишите результат целиком.':'. Запишите последнюю цифру результата, остальное — в уме.'));carry=last?0:Math.floor(t/10);}
+  rows.push(rr);row++;}
+ if(rows.length===1){const rr=rows[0];if(rr.j>0){const set=[];for(let p=0;p<rr.j;p++)set.push([rr.row,R(p),'0','res']);b.step(`Строку сдвинули влево, поэтому справа дописываем <b>${'0'.repeat(rr.j)}</b> — нули за пропущенные разряды.`,set);b.ask('Строка сдвинута влево. Что нужно дописать справа, чтобы разряды встали на места?');}
+  b.ans=`${A0} × ${B0} = ${A0*B0}`;return b;}
+ const sumRow=row,minC=Math.min(...rows.map(r=>Math.min(...Object.keys(r.cells).map(Number))));
+ b.step(`Все неполные произведения готовы. Подводим черту и <b>складываем</b> их, как обычный столбик сложения.`,carrySet.map(x=>[x[0],x[1],'','']).concat([[rows[0].row+1,minC-1,'+','sign']]),[],[{h:1,r:sumRow-1,c1:minC-1,c2:W-1}]);
+ const P=String(A*B),lp=P.length;let carry=0;
+ for(let p=0;p<lp;p++){const col=R(p),ds=rows.filter(r=>r.cells[col]!==undefined).map(r=>r.cells[col]),hl=rows.filter(r=>r.cells[col]!==undefined).map(r=>[r.row,col]);const s=ds.reduce((x,y)=>x+y,0)+carry;let t=`<b>${cap(pl(p))}:</b> `;
+  if(p===lp-1&&s>=10){t+=(ds.length?ds.join(' + ')+(carry?` + ${y(carry)}`:''):y(carry))+` = <b>${s}</b>. Пишем ${s}.`;b.step(t,numCells(sumRow,col,s,'res'),hl);b.ask(`<b>${cap(pl(p))}:</b> сложите цифры в этом разряде`+(carry?' и то, что в уме':'')+'. Это последний разряд — запишите сумму целиком.');break;}
+  if(!ds.length&&!carry)t+=`цифр нет — пишем <b>0</b>.`;
+  else if(ds.length===1&&!carry)t+=`одна цифра — сносим <b>${s}</b> вниз.`;
+  else t+=(ds.length?ds.join(' + '):'')+(carry?(ds.length?' + ':'')+y(carry)+' в уме':'')+` = <b>${s}</b>. Пишем <b>${s%10}</b>`+(s>=10?`, ${Math.floor(s/10)} в уме.`:'.');
+  b.step(t,[[sumRow,col,String(s%10),'res']],hl);b.ask(`<b>${cap(pl(p))}:</b> сложите цифры неполных произведений в этом разряде`+(carry?` и <b>${carry}</b> в уме`:'')+'.');carry=Math.floor(s/10);}
+ b.ans=`${A0} × ${B0} = ${A0*B0}`;return b;}
+
+function buildDiv(A,B){const b=new Builder(),s=String(A),n=s.length,lb=String(B).length,D=n+1,Q=A>=B?String(Math.floor(A/B)):'0';
+ const qW=Math.max(lb,Q.length);
+ b.step(`Записываем деление <b>уголком</b>: слева делимое ${A}, справа делитель ${B}. Частное будем писать под делителем.`,
+  [...numCells(0,n,s),...numCells(0,D+lb-1,B)],[],[{h:0,r1:0,r2:1,c:D},{h:1,r:0,c1:D,c2:D+qW-1}]);
+ if(A<B){b.step(`${A} меньше ${B} — делитель не помещается ни разу. Частное <b>0</b>, остаток <b>${A}</b>.`,[[1,D,'0','res']],[]);b.ans=`${A} : ${B} = 0 (ост. ${A})`;return b;}
+ let k=1;while(+s.slice(0,k)<B)k++;let cur=+s.slice(0,k);const cnt=n-k+1;
+ const hl0=[];for(let i=0;i<k;i++)hl0.push([0,i+1]);
+ b.step(`Находим <b>первое неполное делимое</b>: берём столько цифр слева, чтобы получилось число не меньше ${B}. `+(k>1?`${s.slice(0,k-1)} меньше ${B}, поэтому берём <b>${cur}</b>.`:`Подходит <b>${cur}</b>.`),[],hl0);
+ const dots=[];for(let i=0;i<cnt;i++)dots.push([1,D+i,'·','dim']);
+ b.step(`После ${cur} в делимом осталось ${n-k} цифр${n-k===1?'а':(n-k>1&&n-k<5?'ы':'')}, значит, в частном будет <b>${cnt}</b> цифр${cnt===1?'а':(cnt<5?'ы':'')} (1 + ${n-k}). Ставим точки.`,dots,hl0);
+ let pos=k-1,r=0,qi=0,rem=0;
+ while(true){const curRow=r;const hlc=numCells(curRow,pos+1,cur).map(x=>[x[0],x[1]]);
+  if(cur<B){b.step(`${cur} меньше ${B} — делитель не помещается. В частное пишем <b>0</b>.`,[[1,D+qi,'0','res']],hlc);b.ask(`Помещается ли ${B} в <b>${cur}</b>? Впишите цифру частного.`);qi++;
+   if(pos<n-1){pos++;cur=cur*10+(+s[pos]);b.step(`Сносим следующую цифру <b>${s[pos]}</b>: получаем <b>${cur}</b>.`,[[r,pos+1,s[pos],'']],[[0,pos+1]]);b.ask('Снесите следующую цифру делимого (она подсвечена).');continue;}
+   rem=cur;break;}
+  const q=Math.floor(cur/B),pr=q*B;let t=`Сколько раз ${B} помещается в <b>${cur}</b>? Подбираем: ${B} · ${q} = ${pr}`+(q<9?`, а ${B} · ${q+1} = ${(q+1)*B} — уже больше ${cur}`:'')+`. В частное пишем <b>${q}</b>.`;
+  b.step(t,[[1,D+qi,String(q),'res']],hlc);b.ask(`Сколько раз <b>${B}</b> помещается в <b>${cur}</b>? Подберите и впишите цифру частного.`);qi++;
+  rem=cur-pr;const pl_=String(pr).length,cl=String(cur).length;
+  b.step(`Умножаем: ${q} · ${B} = <b>${pr}</b>. Записываем под ${cur} и вычитаем: ${cur} − ${pr} = <b>${rem}</b>.`,
+   [...numCells(r+1,pos+1,pr),[r+1,pos+1-Math.max(pl_,cl),'−','sign'],...(rem>0||pos===n-1?numCells(r+2,pos+1,rem,pos===n-1?'res':''):[])],
+   hlc,[{h:1,r:r+1,c1:pos+2-Math.max(pl_,cl),c2:pos+1}]);b.ask(`Умножьте цифру частного на ${B}, запишите произведение под <b>${cur}</b> и вычтите`+(rem>0||pos===n-1?'.':' (если получится 0, его не пишем).'));
+  r+=2;
+  if(pos<n-1){pos++;cur=rem*10+(+s[pos]);b.step(`Сносим следующую цифру <b>${s[pos]}</b>: `+(rem?`к остатку ${rem} приписываем ${s[pos]} — получаем <b>${cur}</b>.`:`остаток был 0, поэтому работаем с числом <b>${cur}</b>.`),[[r,pos+1,s[pos],'']],[[0,pos+1]]);b.ask('Снесите следующую цифру делимого (она подсвечена).');continue;}
+  break;}
+ const qq=Math.floor(A/B),rr=A%B;
+ b.step(rr?`Цифры делимого закончились. <b>${rr}</b> меньше ${B} — это <b>остаток</b>. Проверка: ${qq} · ${B} + ${rr} = ${qq*B+rr}. ✓`:`Цифры делимого закончились, остаток <b>0</b> — разделилось нацело. Проверка: ${qq} · ${B} = ${qq*B}. ✓`,[],[]);
+ b.ans=`${A} : ${B} = ${qq}`+(rr?` (ост. ${rr})`:'');return b;}
+
+/* ---------- отрисовка ---------- */
+function cellSize(cols){const box=$('.paper').clientWidth-30;return Math.max(20,Math.min(46,Math.floor(box/(cols+0.5))));}
+const isIn=(x,i)=>i>0&&/^\d$/.test(x[2])&&!['small','strike','dim'].includes(x[3]);
+function render(){if(mode==='solve')return renderSolve();const g=$('#grid');if(!S||!S.steps)return;const st=S.steps,sz=cellSize(S.cols+1);g.style.setProperty('--s',sz+'px');
+ const W=S.cols+1,H=S.rows+1;g.style.width=W*sz+'px';g.style.height=H*sz+'px';
+ const cells={},lines=[];for(let i=0;i<=k;i++){st[i].set.forEach(x=>{cells[x[0]+','+x[1]]={v:x[2],cls:x[3],i};});lines.push(...st[i].lines);}
+ const hl=new Set(st[k].hl.map(x=>x[0]+','+x[1]));
+ let h='';for(const key in cells){const c=cells[key];if(c.v==='')continue;const[r,cc]=key.split(',').map(Number);
+  h+=`<div class="c ${c.cls}${hl.has(key)?' hl':''}${c.i===k?' new':''}" style="left:${cc*sz}px;top:${r*sz}px">${c.v}</div>`;}
+ hl.forEach(key=>{if(!cells[key]||cells[key].v===''){const[r,cc]=key.split(',').map(Number);h+=`<div class="c hl" style="left:${cc*sz}px;top:${r*sz}px"></div>`;}});
+ lines.forEach(l=>{if(l.h)h+=`<div class="hl-line" style="left:${l.c1*sz}px;width:${(l.c2-l.c1+1)*sz}px;top:${(l.r+1)*sz-1}px"></div>`;else h+=`<div class="vl-line" style="left:${l.c*sz-1}px;top:${l.r1*sz}px;height:${(l.r2-l.r1+1)*sz}px"></div>`;});
+ g.innerHTML=h;
+ $('#cnt').textContent=`Шаг ${k+1} из ${st.length}`;$('#prog').style.width=((k+1)/st.length*100)+'%';$('#txt').innerHTML=st[k].text;
+ $('#ans').textContent=k===st.length-1?'Ответ: '+S.ans:'';$('#prev').disabled=k===0;$('#next').disabled=k===st.length-1;$('#first').disabled=k===0;$('#last').disabled=k===st.length-1;}
+function renderSolve(){const g=$('#grid');if(!S||!S.steps)return;const st=S.steps,sz=cellSize(S.cols+1);g.style.setProperty('--s',sz+'px');
+ g.style.width=(S.cols+1)*sz+'px';g.style.height=(S.rows+1)*sz+'px';
+ const cur=st[k],ins=cur.set.filter(x=>isIn(x,k)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]);if(!ins.length)done=true;
+ const cells={},lines=[];for(let i=0;i<=k;i++){st[i].set.forEach(x=>{if(i===k&&!done&&x[3]!=='sign'&&x[3]!=='dim')return;cells[x[0]+','+x[1]]={v:x[2],cls:x[3],i};});lines.push(...st[i].lines);}
+ const hl=new Set(cur.hl.map(x=>x[0]+','+x[1]));let h='';
+ for(const key in cells){const c=cells[key];if(c.v==='')continue;const[r,cc]=key.split(',').map(Number);
+  h+=`<div class="c ${c.cls}${hl.has(key)?' hl':''}${c.i===k&&done?' new':''}" style="left:${cc*sz}px;top:${r*sz}px">${c.v}</div>`;}
+ hl.forEach(key=>{if(!cells[key]){const[r,cc]=key.split(',').map(Number);if(!ins.some(x=>x[0]===r&&x[1]===cc))h+=`<div class="c hl" style="left:${cc*sz}px;top:${r*sz}px"></div>`;}});
+ lines.forEach(l=>{if(l.h)h+=`<div class="hl-line" style="left:${l.c1*sz}px;width:${(l.c2-l.c1+1)*sz}px;top:${(l.r+1)*sz-1}px"></div>`;else h+=`<div class="vl-line" style="left:${l.c*sz-1}px;top:${l.r1*sz}px;height:${(l.r2-l.r1+1)*sz}px"></div>`;});
+ if(!done)ins.forEach((x,j)=>{const key=x[0]+','+x[1];h+=`<input class="cin" data-key="${key}" data-j="${j}" maxlength="1" inputmode="numeric" autocomplete="off" aria-label="Клетка" value="${vals[key]||''}" style="left:${x[1]*sz}px;top:${x[0]*sz}px">`;});
+ g.innerHTML=h;
+ const last=k===st.length-1;
+ $('#cnt').textContent=`Шаг ${k+1} из ${st.length}`;$('#prog').style.width=((k+(done?1:0))/st.length*100)+'%';
+ $('#txt').innerHTML=done?cur.text:(cur.ask||'Впишите цифры в пустые клетки.');
+ $('#chk').style.display=done?'none':'';$('#hint').style.display=done?'none':'';$('#reveal').style.display=done?'none':'';$('#fwd').style.display=done&&!last?'':'none';
+ $('#ans').textContent=last&&done?'Ответ: '+S.ans:'';
+ $('#stat').textContent=need?`С первой попытки: ${good} из ${need}`:'';
+ if(last&&done&&need){const f=$('#fbk');f.className='fbk good';f.textContent=good===need?'🏆 Идеально! Все шаги с первой попытки!':`Готово! С первой попытки: ${good} из ${need} ${need%10===1&&need%100!==11?'шага':'шагов'}`+(revealed?`, подсмотрено: ${revealed}.`:'.');}
+ const cins=$$('#grid .cin');cins.forEach((c,j)=>{c.addEventListener('input',()=>{c.value=c.value.replace(/\D/g,'').slice(-1);vals[c.dataset.key]=c.value;c.classList.remove('bad');if(c.value&&cins[j+1])cins[j+1].focus();});
+  c.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check();}if(e.key==='Backspace'&&!c.value&&cins[j-1]){e.preventDefault();cins[j-1].focus();}});});
+ if(cins.length)setTimeout(()=>{const f=cins.find(c=>!c.value)||cins[0];f.focus({preventScroll:true});},30);}
+function solveIns(){return S.steps[k].set.filter(x=>isIn(x,k));}
+function check(){if(done)return;const ins=solveIns();let ok=true;const f=$('#fbk');
+ ins.forEach(x=>{const key=x[0]+','+x[1],c=$(`#grid .cin[data-key="${key}"]`);if((vals[key]||'')!==x[2]){ok=false;if(c)c.classList.add('bad');}});
+ if(!ins.every(x=>vals[x[0]+','+x[1]])){f.className='fbk bad';f.textContent='Заполните все пустые клетки.';$$('#grid .cin').forEach(c=>{if(c.value)c.classList.remove('bad');});return;}
+ if(ok){if(tries===0)good++;done=true;f.className='fbk good';f.textContent=tries===0?'✅ Верно!':'✅ Верно! Получилось со '+(tries+1)+'-й попытки.';$('#tip2').style.display='none';renderSolve();}
+ else{tries++;f.className='fbk bad';f.textContent='Есть ошибка — красные клетки. Попробуйте ещё раз'+(tries>=2?' или возьмите подсказку.':'.');}}
+function startStep(){done=false;tries=0;$('#fbk').textContent='';$('#tip2').style.display='none';const ins=solveIns();if(ins.length)need++;renderSolve();}
+function startSolve(){k=0;good=0;need=0;revealed=0;vals={};startStep();}
+$('#chk').addEventListener('click',check);
+$('#fwd').addEventListener('click',()=>{if(k<S.steps.length-1){k++;startStep();}});
+$('#hint').addEventListener('click',()=>{const t=$('#tip2');t.style.display='block';t.innerHTML='💡 '+S.steps[k].text;if(tries===0)tries=1;});
+$('#reveal').addEventListener('click',()=>{solveIns().forEach(x=>vals[x[0]+','+x[1]]=x[2]);done=true;revealed++;$('#fbk').className='fbk';$('#fbk').textContent='👀 Шаг показан.';$('#tip2').style.display='none';renderSolve();});
+$('#restart').addEventListener('click',startSolve);
+function setMode(m){mode=m;stopAuto();$$('.mode').forEach(b=>b.classList.toggle('on',b.dataset.m===m));$('#navSolve').style.display=m==='solve'?'':'none';$('#navShow').style.display=m==='show'?'':'none';
+ $('#fbk').textContent='';$('#tip2').style.display='none';$('#stat').textContent='';if(m==='solve')startSolve();else{k=0;render();}}
+$$('.mode').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.m)));
+function stopAuto(){clearInterval(timer);timer=null;$('#auto').textContent='▶ Авто';}
+function build(){stopAuto();const ea=$('#a'),eb=$('#b');const sa=ea.value.replace(/\s/g,''),sb=eb.value.replace(/\s/g,'');const L=LIM[op];
+ const fail=m=>{$('#err').textContent=m;};$('#err').textContent='';
+ if(!/^\d+$/.test(sa)||!/^\d+$/.test(sb))return fail('Введите целые неотрицательные числа — только цифры.');
+ const A=+sa,B=+sb;if(String(A).length>L[0]||String(B).length>L[1])return fail(`Для этого действия: первое число — до ${L[0]} цифр, второе — до ${L[1]} цифр.`);
+ if(op==='/'&&B===0)return fail('На ноль делить нельзя! 🙂');
+ ea.value=A;eb.value=B;
+ S=op==='+'?buildAdd(A,B):op==='-'?buildSub(A,B):op==='*'?buildMul(A,B):buildDiv(A,B);k=0;
+ if(mode==='solve'){startSolve();}
+ $('#algo').innerHTML=`<summary>📋 Алгоритм: ${{'+':'сложение','-':'вычитание','*':'умножение','/':'деление'}[op]} столбиком</summary><ol>${ALGO[op].map(x=>`<li>${x}</li>`).join('')}</ol>`;if(mode==='show')render();}
+function setOp(o){op=o;$$('.op').forEach(b=>b.classList.toggle('on',b.dataset.op===o));const L=LIM[o];$('#lim').textContent=`Первое число — до ${L[0]} цифр, второе — до ${L[1]} цифр.`;}
+$$('.op').forEach(b=>b.addEventListener('click',()=>{setOp(b.dataset.op);build();}));
+$('#go').addEventListener('click',build);
+[$('#a'),$('#b')].forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')build();}));
+$('#next').addEventListener('click',()=>{stopAuto();if(k<S.steps.length-1){k++;render();}});
+$('#prev').addEventListener('click',()=>{stopAuto();if(k>0){k--;render();}});
+$('#first').addEventListener('click',()=>{stopAuto();k=0;render();});
+$('#last').addEventListener('click',()=>{stopAuto();k=S.steps.length-1;render();});
+$('#auto').addEventListener('click',function(){if(timer){stopAuto();return;}if(k===S.steps.length-1)k=0;render();this.textContent='❚❚ Пауза';timer=setInterval(()=>{if(k>=S.steps.length-1){stopAuto();return;}k++;render();},2200);});
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(mode==='solve'){if(e.key==='Enter'||e.key==='ArrowRight'){if(done)$('#fwd').click();}return;}if(e.key==='ArrowRight')$('#next').click();if(e.key==='ArrowLeft')$('#prev').click();});
+const R=(lo,hi)=>lo+Math.floor(Math.random()*(hi-lo+1));
+$('#rnd').addEventListener('click',()=>{let a,b;if(op==='+'){a=R(100,99999);b=R(10,9999);}else if(op==='-'){a=R(1000,99999);b=R(100,a);if(Math.random()<.4)a=+(String(R(1,9))+'00'+R(1,9)+String(R(0,9)));}else if(op==='*'){a=R(12,9999);b=R(2,999);}else{b=R(2,99);a=b*R(11,999)+(Math.random()<.5?0:R(1,b-1));}
+ $('#a').value=a;$('#b').value=b;build();});
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(document.activeElement&&document.activeElement.classList.contains('cin'))return;render();},120);});
+setOp('+');build();
+window.__t={buildAdd,buildSub,buildMul,buildDiv};window.__cur=()=>S.steps[k].set.filter(x=>isIn(x,k)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(x=>x[2]);
+})();
+</script>
+</body>
+</html>
